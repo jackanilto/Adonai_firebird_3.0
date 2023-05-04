@@ -138,6 +138,7 @@ type
     RelDSigrejas: TfrxDBDataset;
     RelCarta: TfrxReport;
     RelDSDOC: TfrxDBDataset;
+    frxReport1: TfrxReport;
     procedure DataModuleCreate(Sender: TObject);
     procedure QueryAniverMesFilterRecord(DataSet: TDataSet;
       var Accept: Boolean);

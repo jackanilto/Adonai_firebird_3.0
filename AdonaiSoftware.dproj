@@ -200,6 +200,10 @@
             <Form>FrmAniversariantes</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Relatorios\UDocumentos.pas">
+            <Form>FrmDocumentos</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

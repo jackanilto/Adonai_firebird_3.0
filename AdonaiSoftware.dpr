@@ -1,5 +1,4 @@
 program AdonaiSoftware;
-
 uses
   Vcl.Forms,
   ULogin in 'ULogin.pas' {FrmLogin},
@@ -23,10 +22,10 @@ uses
   UCarteirinhas in 'Relatorios\UCarteirinhas.pas' {FrmCarteirinha},
   UDizimos in 'Movimentacoes\UDizimos.pas' {FrmDIZIMOOFERTA},
   UBuscarMembro in 'Movimentacoes\UBuscarMembro.pas' {FrmBUSCARMEMBRO},
-  UAniversariantes in 'Movimentacoes\UAniversariantes.pas' {FrmAniversariantes};
+  UAniversariantes in 'Movimentacoes\UAniversariantes.pas' {FrmAniversariantes},
+  UDocumentos in 'Relatorios\UDocumentos.pas' {FrmDocumentos};
 
 {$R *.res}
-
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
@@ -44,6 +43,7 @@ begin
   Application.CreateForm(TFrmDIZIMOOFERTA, FrmDIZIMOOFERTA);
   Application.CreateForm(TFrmBUSCARMEMBRO, FrmBUSCARMEMBRO);
   Application.CreateForm(TFrmAniversariantes, FrmAniversariantes);
-  //Application.CreateForm(TfrmWebCam, frmWebCam);
+  Application.CreateForm(TFrmDocumentos, FrmDocumentos);
+  Application.CreateForm(TfrmWebCam, frmWebCam);
   Application.Run;
 end.

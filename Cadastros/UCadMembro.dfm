@@ -3111,7 +3111,7 @@
           end>
       end
       object EditID: TEdit
-        Left = 267
+        Left = 177
         Top = 16
         Width = 89
         Height = 21

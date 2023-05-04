@@ -1,12 +1,9 @@
 unit UCarteirinhas;
-
 interface
-
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids, UDM,
   Vcl.StdCtrls, Vcl.Buttons, Jpeg;
-
 type
   TFrmCarteirinha = class(TForm)
     gridListMembros: TDBGrid;
@@ -31,23 +28,32 @@ type
    procedure buscarTudo();
    procedure buscarNome();
   end;
-
 var
   FrmCarteirinha: TFrmCarteirinha;
-
 implementation
-
 {$R *.dfm}
-
 procedure TFrmCarteirinha.btnCarteirinhaClick(Sender: TObject);
 begin
+//     selecione o objeto frxPictureView que você adicionou e na aba Events dê dois cliques
+//     em OnAfterData e digite o seguinte código:
+//     picture1.Picture.LoadFromFile(<frxDataSet."CAMINHO">);
+//
+//    onde
+//
+//    picture1 é o nome do objeto de imagem;
+//    Picture é a propriedade que armazena a imagem;
+//    LoadFromFile é o método que Carrega uma imagem
+//    frxDataSet é o nome do dataset que você carregou dentro do seu relatório (que geralmente aparece
+//    ao lado direto da Engine do fastreport.
+//    Caminho é o nome do Field do dataset (ou campo da tabela) que contem o caminho do arquivo em string;
+
+
   DM.CDSCarteira.Open;
-  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelCarteiraMembro.fr3');
+  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelCarteirinha.fr3');
   DM.RelCarteira.ShowReport();
   btnCarteirinha.Enabled := true;
   buscarTudo; // Após chamar o relatorio, executa a procedure BuscarTudo
 end;
-
 procedure TFrmCarteirinha.buscarNome;
 begin
   dm.QueryMembro.Close;
@@ -56,7 +62,6 @@ begin
   dm.QueryMembro.ParamByName('nome').Value := '%' + edtBuscar.Text + '%'; // o '%' + edtBuscar.Text + '%' retorna qualquer palavra em qualquer posição na frase ou nome
   dm.QueryMembro.Open;
 end;
-
 procedure TFrmCarteirinha.buscarTudo;
 begin
   DM.QueryMembro.Close;
@@ -64,24 +69,20 @@ begin
   DM.QueryMembro.SQL.Add('select * from TBL_MEMBROS order by nome asc');
   DM.QueryMembro.Open();
 end;
-
 procedure TFrmCarteirinha.edtBuscarChange(Sender: TObject);
 begin
   buscarNome;
 end;
-
 procedure TFrmCarteirinha.FormShow(Sender: TObject);
 begin
   buscarTudo;
   edtBuscar.SetFocus;
 end;
-
 procedure TFrmCarteirinha.FormCreate(Sender: TObject);
 begin
   DM.CDSCarteira.Active := false;
   DM.CDSCarteira.Active := true;
 end;
-
 
 procedure TFrmCarteirinha.gridListMembrosDblClick(Sender: TObject);
 begin
@@ -103,7 +104,5 @@ end;
   procedure TFrmCarteirinha.SpeedButton1Click(Sender: TObject);
   begin
     DM.CDSCarteira.EmptyDataSet;
-
   end;
-
 end.

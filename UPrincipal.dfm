@@ -68,8 +68,8 @@ object FrmPrincipal: TFrmPrincipal
       ParentFont = False
       TabOrder = 1
       object LabelUsuario: TLabel
-        Left = 56
-        Top = 12
+        Left = 64
+        Top = 20
         Width = 176
         Height = 33
         Alignment = taCenter
@@ -84,7 +84,7 @@ object FrmPrincipal: TFrmPrincipal
         ParentFont = False
       end
       object LabelHora: TLabel
-        Left = 56
+        Left = 64
         Top = 59
         Width = 138
         Height = 33
@@ -3673,6 +3673,20 @@ object FrmPrincipal: TFrmPrincipal
       Layout = blGlyphTop
       ParentFont = False
       OnClick = SpeedButton1Click
+    end
+    object btnDocumentos: TSpeedButton
+      Left = 662
+      Top = 0
+      Width = 97
+      Height = 71
+      Caption = 'Documentos'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      OnClick = btnDocumentosClick
     end
   end
   object Timer1: TTimer

@@ -903,7 +903,7 @@ begin
   DM.QueryMembro.Open();
 
 
-  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelCarteiraMembro.fr3');
+  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelCarteirinha.fr3');
   DM.RelCarteira.ShowReport();
   btnCartas.Enabled := false;
   buscarTudo; // Após chamar o relatorio, executa a procedure BuscarTudo
