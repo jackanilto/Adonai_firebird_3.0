@@ -12,11 +12,9 @@ object FrmSobre: TFrmSobre
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
   OnActivate = FormActivate
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage
     Left = 0
@@ -3871,7 +3869,7 @@ object FrmSobre: TFrmSobre
     Top = 256
     Width = 321
     Height = 41
-    Caption = 'Visitar Site : www.jncenter.com.br'
+    Caption = 'Visitar Site : www.jncsolucoes.com.br'
     Flat = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clHighlightText
@@ -4144,7 +4142,6 @@ object FrmSobre: TFrmSobre
     ParentFont = False
   end
   object EvAppProtect1: TEvAppProtect
-    Active = False
     IdApplication = 6101974
     RegKey = '\SOFTWARE\TCF Software\AppProtect\'
     Left = 528

@@ -41,6 +41,7 @@ type
     Utilitarios1: TMenuItem;
     Calculadora1: TMenuItem;
     btnDocumentos: TSpeedButton;
+    Cadastrodaigreja1: TMenuItem;
     //EvSplashScreen1: TEvSplashScreen;
     procedure Button1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -62,6 +63,7 @@ type
     procedure SpeedButton1Click(Sender: TObject);
     procedure Calculadora1Click(Sender: TObject);
     procedure btnDocumentosClick(Sender: TObject);
+    procedure Cadastrodaigreja1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -72,7 +74,7 @@ var
 implementation
 {$R *.dfm}
 uses UDM, ULogin, UCadMembro, UProfissoes, UGrupos, UTratamentos, USobre,
-  UDocumentos;
+  UDocumentos, UCadIgreja;
 procedure TFrmPrincipal.btnGRUPOSClick(Sender: TObject);
 begin
 FrmGRUPOS.ShowModal;
@@ -81,6 +83,11 @@ procedure TFrmPrincipal.Button1Click(Sender: TObject);
 begin
 Application.Terminate;
 end;
+procedure TFrmPrincipal.Cadastrodaigreja1Click(Sender: TObject);
+begin
+   frmCadIgreja.ShowModal;
+end;
+
 procedure TFrmPrincipal.Calculadora1Click(Sender: TObject);
 begin
 WinExec ('Calc.exe',SW_Show);

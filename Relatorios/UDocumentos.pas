@@ -9,8 +9,19 @@ uses
 
 type
   TFrmDocumentos = class(TFrmCarteirinha)
-    SpeedButton2: TSpeedButton;
+    btnCartaRecomenda: TSpeedButton;
+    btnLimpaListaDocumentos: TSpeedButton;
+    btnCertificaBatismo: TSpeedButton;
+    btnAniverCasamento: TSpeedButton;
+    btnCertificaBatismo2: TSpeedButton;
     procedure btnCarteirinhaClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure btnCartaRecomendaClick(Sender: TObject);
+    procedure btnLimpaListaDocumentosClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnCertificaBatismoClick(Sender: TObject);
+    procedure btnAniverCasamentoClick(Sender: TObject);
+    procedure btnCertificaBatismo2Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -31,7 +42,16 @@ uses UDM;
 procedure TFrmDocumentos.btnCarteirinhaClick(Sender: TObject);
 begin
   DM.CDSCarteira.Open;
-  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelCartaRecomendacao.fr3');
+  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelCarteira1deMaio.fr3');
+  DM.RelCarteira.ShowReport();
+  btnCarteirinha.Enabled := true;
+  buscarTudo; // Após chamar o relatorio, executa a procedure BuscarTudo
+end;
+
+procedure TFrmDocumentos.btnCertificaBatismoClick(Sender: TObject);
+begin
+  DM.CDSCarteira.Open;
+  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelCertificadoBatismo.fr3');
   DM.RelCarteira.ShowReport();
   btnCarteirinha.Enabled := true;
   buscarTudo; // Após chamar o relatorio, executa a procedure BuscarTudo
@@ -52,6 +72,52 @@ begin
   DM.QueryMembro.SQL.Clear;
   DM.QueryMembro.SQL.Add('select * from TBL_MEMBROS order by nome asc');
   DM.QueryMembro.Open();
+end;
+
+procedure TFrmDocumentos.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  DM.CDSCarteira.EmptyDataSet;
+end;
+
+procedure TFrmDocumentos.FormCreate(Sender: TObject);
+begin
+ Dm.CDSCarteira.EmptyDataSet;
+
+end;
+
+procedure TFrmDocumentos.btnCertificaBatismo2Click(Sender: TObject);
+begin
+  DM.CDSCarteira.Open;
+  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelCertificadoBatismo2.fr3');
+  DM.RelCarteira.ShowReport();
+  btnCarteirinha.Enabled := true;
+  buscarTudo; // Após chamar o relatorio, executa a procedure BuscarTudo
+end;
+
+procedure TFrmDocumentos.btnLimpaListaDocumentosClick(Sender: TObject);
+  begin
+    DM.CDSCarteira.EmptyDataSet;
+  end;
+
+procedure TFrmDocumentos.btnAniverCasamentoClick(Sender: TObject);
+begin
+  inherited;
+  DM.CDSCarteira.Open;
+  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelaAniverCasamento.fr3');
+  DM.RelCarteira.ShowReport();
+  btnCarteirinha.Enabled := true;
+  buscarTudo; // Após chamar o relatorio, executa a procedure BuscarTudo
+end;
+
+procedure TFrmDocumentos.btnCartaRecomendaClick(Sender: TObject);
+begin
+  inherited;
+  DM.CDSCarteira.Open;
+  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelCartaRecomendacao.fr3');
+  DM.RelCarteira.ShowReport();
+  btnCarteirinha.Enabled := true;
+  buscarTudo; // Após chamar o relatorio, executa a procedure BuscarTudo
+
 end;
 
 end.

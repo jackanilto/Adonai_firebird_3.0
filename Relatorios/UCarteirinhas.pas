@@ -13,13 +13,14 @@ type
     Label2: TLabel;
     Label3: TLabel;
     btnCarteirinha: TSpeedButton;
-    SpeedButton1: TSpeedButton;
+    btnLimpaListaCarteiras: TSpeedButton;
     procedure edtBuscarChange(Sender: TObject);
     procedure gridListMembrosDblClick(Sender: TObject);
     procedure btnCarteirinhaClick(Sender: TObject);
-    procedure SpeedButton1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnLimpaListaCarteirasClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -49,7 +50,7 @@ begin
 
 
   DM.CDSCarteira.Open;
-  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelCarteirinha.fr3');
+  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelCarteira1deMaio.fr3');
   DM.RelCarteira.ShowReport();
   btnCarteirinha.Enabled := true;
   buscarTudo; // Após chamar o relatorio, executa a procedure BuscarTudo
@@ -78,6 +79,12 @@ begin
   buscarTudo;
   edtBuscar.SetFocus;
 end;
+procedure TFrmCarteirinha.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+// lIMPA O DBGRID DA SELEÇÃO AO FECHAR O FORM
+  DM.CDSCarteira.EmptyDataSet;
+end;
+
 procedure TFrmCarteirinha.FormCreate(Sender: TObject);
 begin
   DM.CDSCarteira.Active := false;
@@ -101,8 +108,9 @@ begin
   DM.CDSCarteira.Post;
 end;
 
-  procedure TFrmCarteirinha.SpeedButton1Click(Sender: TObject);
+procedure TFrmCarteirinha.btnLimpaListaCarteirasClick(Sender: TObject);
   begin
+  // lIMPA SELEÇAO DO DBGRID AO CLICAR NO BTN
     DM.CDSCarteira.EmptyDataSet;
   end;
 end.

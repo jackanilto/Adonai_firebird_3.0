@@ -537,7 +537,7 @@ end;
 
 procedure TFrmCadMembro.carregarImagemPadrao;
 begin
-    caminhoImg  := GetCurrentDir + '\img\sem-foto.png';
+    caminhoImg  := GetCurrentDir + '\Fotos\sem-foto.png';
     imgProfile.Picture.LoadFromFile(caminhoImg);
 end;
 

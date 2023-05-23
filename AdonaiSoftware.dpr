@@ -23,7 +23,8 @@ uses
   UDizimos in 'Movimentacoes\UDizimos.pas' {FrmDIZIMOOFERTA},
   UBuscarMembro in 'Movimentacoes\UBuscarMembro.pas' {FrmBUSCARMEMBRO},
   UAniversariantes in 'Movimentacoes\UAniversariantes.pas' {FrmAniversariantes},
-  UDocumentos in 'Relatorios\UDocumentos.pas' {FrmDocumentos};
+  UDocumentos in 'Relatorios\UDocumentos.pas' {FrmDocumentos},
+  UCadIgreja in 'Cadastros\UCadIgreja.pas' {frmCadIgreja};
 
 {$R *.res}
 begin
@@ -45,5 +46,6 @@ begin
   Application.CreateForm(TFrmAniversariantes, FrmAniversariantes);
   Application.CreateForm(TFrmDocumentos, FrmDocumentos);
   Application.CreateForm(TfrmWebCam, frmWebCam);
+  Application.CreateForm(TfrmCadIgreja, frmCadIgreja);
   Application.Run;
 end.
