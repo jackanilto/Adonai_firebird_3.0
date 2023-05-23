@@ -16,6 +16,12 @@ object FrmPrincipal: TFrmPrincipal
   Position = poScreenCenter
   OnShow = FormShow
   TextHeight = 13
+  object SpeedButton3: TSpeedButton
+    Left = 328
+    Top = 200
+    Width = 23
+    Height = 22
+  end
   object PanelMenuDireita: TPanel
     Left = 835
     Top = 73
