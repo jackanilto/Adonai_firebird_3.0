@@ -42,7 +42,6 @@ type
     Calculadora1: TMenuItem;
     btnDocumentos: TSpeedButton;
     Cadastrodaigreja1: TMenuItem;
-    SpeedButton3: TSpeedButton;
     //EvSplashScreen1: TEvSplashScreen;
     procedure Button1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);

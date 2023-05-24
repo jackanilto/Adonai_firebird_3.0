@@ -4142,8 +4142,6 @@ object FrmSobre: TFrmSobre
     ParentFont = False
   end
   object EvAppProtect1: TEvAppProtect
-    Active = True
-    EvalLoads = 1000
     IdApplication = 6101974
     RegKey = '\SOFTWARE\TCF Software\AppProtect\'
     Left = 528

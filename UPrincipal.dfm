@@ -16,12 +16,6 @@ object FrmPrincipal: TFrmPrincipal
   Position = poScreenCenter
   OnShow = FormShow
   TextHeight = 13
-  object SpeedButton3: TSpeedButton
-    Left = 328
-    Top = 200
-    Width = 23
-    Height = 22
-  end
   object PanelMenuDireita: TPanel
     Left = 835
     Top = 73
@@ -37,12 +31,13 @@ object FrmPrincipal: TFrmPrincipal
       Top = 8
       Width = 249
       Height = 186
+      BorderColor = clNavy
       Color = clInactiveCaption
-      Date = 44094.000000000000000000
+      Date = 45069.000000000000000000
       FocusedColor = clMedGray
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -16
+      Font.Height = -12
       Font.Name = 'Segoe UI'
       Font.Style = [fsBold]
       Font.Quality = fqProof
@@ -57,7 +52,11 @@ object FrmPrincipal: TFrmPrincipal
       HeaderInfo.Font.Name = 'Segoe UI'
       HeaderInfo.Font.Style = []
       ParentFont = False
+      ParentShowHint = False
+      ShowHint = False
+      StyleName = 'Windows'
       TabOrder = 0
+      TodayColor = clRed
       Touch.ParentTabletOptions = False
       Touch.TabletOptions = [toPressAndHold]
     end

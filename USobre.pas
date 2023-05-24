@@ -9,7 +9,6 @@ uses
 
 type
   TFrmSobre = class(TForm)
-    EvAppProtect1: TEvAppProtect;
     Image1: TImage;
     Label1: TLabel;
     SpeedButton1: TSpeedButton;
@@ -17,6 +16,7 @@ type
     SpeedButton3: TSpeedButton;
     Image2: TImage;
     Label2: TLabel;
+    EvAppProtect1: TEvAppProtect;
     procedure FormActivate(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);

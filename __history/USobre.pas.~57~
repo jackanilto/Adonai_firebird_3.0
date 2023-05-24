@@ -51,7 +51,8 @@ end;
 
 procedure TFrmSobre.FormCreate(Sender: TObject);
 const
- Msg = 'Faltam ' + Label2 +' dias para expirar sua licença';
+ Msg = 'Faltam menos de 10 dias para a licença expirar. '+ #13 +
+ 'Deseja renovar agora?';
 begin
   if ((EvAppProtect1.DateEnd - Date) < 10) and
     (MessageDlg(Msg, mtConfirmation, mbYesNoCancel, 0) = mrYes) then
