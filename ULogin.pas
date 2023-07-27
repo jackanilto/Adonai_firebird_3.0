@@ -41,7 +41,7 @@ implementation
 
 {$R *.dfm}
 
-uses UDM, UPrincipal;
+uses UDM, UPrincipal, Utema;
 
  //inicio do login
 procedure TFrmLogin.BtnLoginClick(Sender: TObject);

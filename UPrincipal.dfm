@@ -4132,6 +4132,13 @@ object FrmPrincipal: TFrmPrincipal
         Caption = 'Cadastro da igreja'
         OnClick = Cadastrodaigreja1Click
       end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object N2: TMenuItem
+        Caption = 'Configura Tema'
+        OnClick = N2Click
+      end
     end
     object Utilitarios1: TMenuItem
       Caption = 'Utilitarios'

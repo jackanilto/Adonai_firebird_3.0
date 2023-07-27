@@ -42,6 +42,8 @@ type
     Calculadora1: TMenuItem;
     btnDocumentos: TSpeedButton;
     Cadastrodaigreja1: TMenuItem;
+    N1: TMenuItem;
+    N2: TMenuItem;
     //EvSplashScreen1: TEvSplashScreen;
     procedure Button1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -64,6 +66,7 @@ type
     procedure Calculadora1Click(Sender: TObject);
     procedure btnDocumentosClick(Sender: TObject);
     procedure Cadastrodaigreja1Click(Sender: TObject);
+    procedure N2Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -74,7 +77,7 @@ var
 implementation
 {$R *.dfm}
 uses UDM, ULogin, UCadMembro, UProfissoes, UGrupos, UTratamentos, USobre,
-  UDocumentos, UCadIgreja;
+  UDocumentos, UCadIgreja, Utema;
 procedure TFrmPrincipal.btnGRUPOSClick(Sender: TObject);
 begin
 FrmGRUPOS.ShowModal;
@@ -118,6 +121,8 @@ procedure TFrmPrincipal.Encerrar1Click(Sender: TObject);
 begin
 Application.Terminate;
 end;
+
+
 procedure TFrmPrincipal.FormShow(Sender: TObject);
 //Abre form full Screen ( precisa configurar BorderStyle = bsSigle ou none )
 var
@@ -138,6 +143,11 @@ procedure TFrmPrincipal.Membros1Click(Sender: TObject);
 begin
 FrmCadMembro.ShowModal;
 end;
+procedure TFrmPrincipal.N2Click(Sender: TObject);
+begin
+   frmTema.ShowModal;
+end;
+
 procedure TFrmPrincipal.Profissoes1Click(Sender: TObject);
 begin
 FrmCadProfissoes.ShowModal;

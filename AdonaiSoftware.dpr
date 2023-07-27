@@ -24,7 +24,10 @@ uses
   UBuscarMembro in 'Movimentacoes\UBuscarMembro.pas' {FrmBUSCARMEMBRO},
   UAniversariantes in 'Movimentacoes\UAniversariantes.pas' {FrmAniversariantes},
   UDocumentos in 'Relatorios\UDocumentos.pas' {FrmDocumentos},
-  UCadIgreja in 'Cadastros\UCadIgreja.pas' {frmCadIgreja};
+  UCadIgreja in 'Cadastros\UCadIgreja.pas' {frmCadIgreja},
+  Utema in 'Tema\Utema.pas' {frmTema},
+  Vcl.Themes,
+  Vcl.Styles;
 
 {$R *.res}
 begin
@@ -47,5 +50,6 @@ begin
   Application.CreateForm(TFrmDocumentos, FrmDocumentos);
   Application.CreateForm(TfrmWebCam, frmWebCam);
   Application.CreateForm(TfrmCadIgreja, frmCadIgreja);
+  Application.CreateForm(TfrmTema, frmTema);
   Application.Run;
 end.
