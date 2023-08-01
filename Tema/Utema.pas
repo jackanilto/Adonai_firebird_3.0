@@ -9,10 +9,13 @@ uses
 type
   TfrmTema = class(TForm)
     ListBox1: TListBox;
-    procedure Button1Click(Sender: TObject);
+    Label1: TLabel;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
     procedure ListBox1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -29,15 +32,6 @@ implementation
 {$R *.dfm}
 // Declaramos a UNIT VCL.THEMES
 Uses Vcl.Themes;
-
-procedure TfrmTema.Button1Click(Sender: TObject);
-begin
- //   Lista os temas no list box
-// ListBox1.Clear;
-// ListBox1.Items.AddStrings(TStyleManager.StyleNames);
-// ListBox1.ItemIndex := ListBox1.Items.IndexOf(TStyleManager.ActiveStyle.Name);
-
-end;
 
 procedure TfrmTema.CarregarTemas;
 begin
@@ -70,6 +64,11 @@ begin
 
        iniConfigura.WriteString('Estilo', 'Estilo', ListBox1.Items[ListBox1.ItemIndex]);
 
+end;
+
+procedure TfrmTema.SpeedButton2Click(Sender: TObject);
+begin
+frmTema.Close;
 end;
 
 end.

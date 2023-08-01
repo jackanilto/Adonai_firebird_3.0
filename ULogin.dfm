@@ -450,6 +450,7 @@ object FrmLogin: TFrmLogin
     000000FF0000FF80000001FF0000FFC0000003FF0000FFF000000FFF0000FFFC
     00003FFF0000FFFF0000FFFF0000FFFFF81FFFFF0000}
   Position = poScreenCenter
+  OnActivate = FormActivate
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   TextHeight = 13

@@ -27,6 +27,7 @@ type
     procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -41,7 +42,7 @@ implementation
 
 {$R *.dfm}
 
-uses UDM, UPrincipal, Utema;
+uses UDM, UPrincipal, Utema, IniFiles, Vcl.Themes;
 
  //inicio do login
 procedure TFrmLogin.BtnLoginClick(Sender: TObject);
@@ -123,8 +124,15 @@ begin
 if key = vk_return then SelectNext(ActiveControl,True,True);
 end;
 
+procedure TFrmLogin.FormActivate(Sender: TObject);
+begin
+     TStyleManager.SetStyle(iniConfigura.ReadString('Estilo', 'Estilo', ''));
+
+end;
+
 procedure TFrmLogin.FormCreate(Sender: TObject);
 begin
+  iniConfigura := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'Configuracao.ini');
 // Mostrar a versao do software na tela de login
  LabelVersao.Caption:= VersaoExe;
 end;
