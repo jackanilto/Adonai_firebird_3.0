@@ -25,6 +25,8 @@ type
     procedure FormCreate(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    //Cria Procedure para destativar so do Windows
+    procedure DisableTabSound;
   private
     { Private declarations }
   public
@@ -63,6 +65,20 @@ procedure TFrmLogin.Button2Click(Sender: TObject);
 begin
    ShowMessage(VersaoExe);
 end;
+
+ // cria função para desabilitar som do windows
+ // Dever ser usada no evento OnCreate do form
+procedure TFrmLogin.DisableTabSound;
+var
+  Sound: Integer;
+begin
+  SystemParametersInfo(SPI_GETBEEP, 0, @Sound, 0);
+  if Sound <> 0 then
+  begin
+    SystemParametersInfo(SPI_SETBEEP, 0, Pointer(0), SPIF_SENDCHANGE);
+  end;
+end;
+
 function VersaoExe: String;
 type
    PFFI = ^vs_FixedFileInfo;
@@ -111,17 +127,23 @@ begin
 // define tab on press enter para navegar entre dbedit´s (Login)
 if key = vk_return then SelectNext(ActiveControl,True,True);
 end;
+
 procedure TFrmLogin.FormActivate(Sender: TObject);
 begin
+//Função que carrega todos os temas setados na IDE delphi
      TStyleManager.SetStyle(iniConfigura.ReadString('Estilo', 'Estilo', ''));
-
 end;
 
 procedure TFrmLogin.FormCreate(Sender: TObject);
 begin
+//Função que le o arquivo INI com o tema salvo
   iniConfigura := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'Configuracao.ini');
 // Mostrar a versao do software na tela de login
  LabelVersao.Caption:= VersaoExe;
+
+// Desabilta Som do Windows
+  DisableTabSound;
+
 end;
 procedure TFrmLogin.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
@@ -136,8 +158,8 @@ begin
  DM.TblAcesso.Open();
     if (DM.TblAcesso.Locate('USUARIO', EdtUser.Text, [])) and (DM.TblAcesso.Locate('SENHA',EdtSenha.Text,[])) then
     Begin
-      FrmPrincipal.Show;
-      FrmLogin.Hide;
+      FrmPrincipal.Show;  //Chama a form Principal
+      FrmLogin.Hide;      // Esconde a form Login
     End
 // Verifica se foram preencidos os campos Login e Senha e exibe o alerta
    else
