@@ -19,7 +19,7 @@ object frmTema: TfrmTema
   object Label1: TLabel
     Left = 8
     Top = 8
-    Width = 358
+    Width = 315
     Height = 25
     Alignment = taCenter
     Caption = 'Clique em um tema para  selecionar'
@@ -97,6 +97,7 @@ object frmTema: TfrmTema
       8A8A8A8A8A8A8A8A7F7474747474747474747F8A8A8A8A8A8A8A}
     Layout = blGlyphTop
     ParentFont = False
+    OnClick = SpeedButton1Click
   end
   object SpeedButton2: TSpeedButton
     Left = 303

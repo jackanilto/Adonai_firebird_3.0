@@ -213,6 +213,10 @@
             <Form>frmTema</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Tema\UAjudaTema.pas">
+            <Form>FrmAjudaTemas</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -16,6 +16,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -31,7 +32,7 @@ implementation
 
 {$R *.dfm}
 // Declaramos a UNIT VCL.THEMES
-Uses Vcl.Themes;
+Uses Vcl.Themes, UAjudaTema;
 
 procedure TfrmTema.CarregarTemas;
 begin
@@ -64,6 +65,11 @@ begin
 
        iniConfigura.WriteString('Estilo', 'Estilo', ListBox1.Items[ListBox1.ItemIndex]);
 
+end;
+
+procedure TfrmTema.SpeedButton1Click(Sender: TObject);
+begin
+FrmAjudaTemas.ShowModal;
 end;
 
 procedure TfrmTema.SpeedButton2Click(Sender: TObject);

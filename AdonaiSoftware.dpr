@@ -27,7 +27,8 @@ uses
   UCadIgreja in 'Cadastros\UCadIgreja.pas' {frmCadIgreja},
   Utema in 'Tema\Utema.pas' {frmTema},
   Vcl.Themes,
-  Vcl.Styles;
+  Vcl.Styles,
+  UAjudaTema in 'Tema\UAjudaTema.pas' {FrmAjudaTemas};
 
 {$R *.res}
 begin
@@ -51,5 +52,6 @@ begin
   Application.CreateForm(TfrmWebCam, frmWebCam);
   Application.CreateForm(TfrmCadIgreja, frmCadIgreja);
   Application.CreateForm(TfrmTema, frmTema);
+  Application.CreateForm(TFrmAjudaTemas, FrmAjudaTemas);
   Application.Run;
 end.

@@ -1,12 +1,9 @@
 unit ULogin;
-
 interface
-
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.Imaging.jpeg, Vcl.Imaging.pngimage;
-
 type
   TFrmLogin = class(TForm)
     GrpBxLogin: TGroupBox;
@@ -33,17 +30,12 @@ type
   public
     { Public declarations }
   end;
-
 var
   FrmLogin: TFrmLogin;
     function VersaoExe: String;
-
 implementation
-
 {$R *.dfm}
-
 uses UDM, UPrincipal, Utema, IniFiles, Vcl.Themes;
-
  //inicio do login
 procedure TFrmLogin.BtnLoginClick(Sender: TObject);
 //Verifica o dados na tabela Acesso
@@ -58,7 +50,6 @@ begin
    else
    if (EdtUser.Text ='') and (EdtSenha.Text = '')then
    ShowMessage ('Preencha os campos Login e Senha') // Caso esteja vazio, exiba msg
-
    else
    MessageDlg('Login ou senha inválidos', mtError, [mbOk], 0); // Caso de digitação errada
 end;
@@ -72,7 +63,6 @@ procedure TFrmLogin.Button2Click(Sender: TObject);
 begin
    ShowMessage(VersaoExe);
 end;
-
 function VersaoExe: String;
 type
    PFFI = ^vs_FixedFileInfo;
@@ -110,20 +100,17 @@ begin
    StrDispose(Parquivo);
 end;
 
-
 procedure TFrmLogin.EdtSenhaKeyPress(Sender: TObject; var Key: Char);
 begin
  if Key = #13 then            // Define o comando enter
     BtnLoginClick(Sender);     // Atribui a função do boatao entrar ao enter
 end;
-
 procedure TFrmLogin.EdtUserKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
 // define tab on press enter para navegar entre dbedit´s (Login)
 if key = vk_return then SelectNext(ActiveControl,True,True);
 end;
-
 procedure TFrmLogin.FormActivate(Sender: TObject);
 begin
      TStyleManager.SetStyle(iniConfigura.ReadString('Estilo', 'Estilo', ''));
@@ -136,14 +123,12 @@ begin
 // Mostrar a versao do software na tela de login
  LabelVersao.Caption:= VersaoExe;
 end;
-
 procedure TFrmLogin.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
 // define tab on press enter para navegar entre dbedit´s  (Senha)
 if key = vk_return then SelectNext(ActiveControl,True,True);
 end;
-
 
 procedure TFrmLogin.SpeedButton1Click(Sender: TObject);
 //Verifica o dados na tabela Acesso
@@ -158,10 +143,8 @@ begin
    else
    if (EdtUser.Text ='') and (EdtSenha.Text = '')then
    ShowMessage ('Preencha os campos Login e Senha') // Caso esteja vazio
-
    else
    MessageDlg('Login ou senha inválidos', mtError, [mbOk], 0); // Caso de digitação errada
 end;
   //Fim do codigo login
-
 end.
