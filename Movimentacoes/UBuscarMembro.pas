@@ -39,14 +39,13 @@ implementation
 
 procedure TFrmBUSCARMEMBRO.buscarNome;
 
-  BEGIN
-
-    dm.QueryMembro.Close;
-    dm.QueryMembro.SQL.Clear;                                 //add collate win_ptbr para busca CASE INSESITIVE
-    dm.QueryMembro.SQL.Add('select * from TBL_MEMBROS where nome collate win_ptbr LIKE :nome order by nome asc');
-    dm.QueryMembro.ParamByName('nome').Value := editBuscar.Text + '%';
-    dm.QueryMembro.Open;
-  end;
+BEGIN
+  dm.QueryMembro.Close;
+  dm.QueryMembro.SQL.Clear;
+  dm.QueryMembro.SQL.Add ('SELECT * FROM TBL_MEMBROS WHERE nome COLLATE win_ptbr LIKE :nome ORDER BY nome ASC');
+  dm.QueryMembro.ParamByName('nome').Value := '%' + EditBUSCAR.Text + '%';
+  dm.QueryMembro.Open;
+end;
 
 
 procedure TFrmBUSCARMEMBRO.buscarRoll;
@@ -55,7 +54,7 @@ begin
   dm.QueryMembro.Close;
   dm.QueryMembro.SQL.Clear;
   dm.QueryMembro.SQL.Add('select * from TBL_MEMBROS where ROLL LIKE :ROLL');
-  dm.QueryMembro.ParamByName('ROLL').Value := editBuscarROLL.Text + '%';
+  dm.QueryMembro.ParamByName('ROLL').Value := '%' + editBuscarROLL.Text + '%';
   dm.QueryMembro.Open;
 end;
 

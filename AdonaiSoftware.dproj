@@ -107,10 +107,10 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1046</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=JNCENTER;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <Icon_MainIcon>AdonaiSoftware_Icon.ico</Icon_MainIcon>
+        <Icon_MainIcon>AdonaiSoftware_Icon2.ico</Icon_MainIcon>
         <VerInfo_AutoGenVersion>true</VerInfo_AutoGenVersion>
-        <UWP_DelphiLogo44>AdonaiSoftware_Icon.ico</UWP_DelphiLogo44>
-        <UWP_DelphiLogo150>AdonaiSoftware_Icon.ico</UWP_DelphiLogo150>
+        <UWP_DelphiLogo44>D:\Delphi\Icones do Projeto Adonai\Icone-da-aplicacao-44x44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>D:\Delphi\Icones do Projeto Adonai\Icone-da-aplicacao-150x150.png</UWP_DelphiLogo150>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
@@ -243,7 +243,14 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="AdonaiSoftware_Icon.ico" Configuration="Debug" Class="UWP_DelphiLogo44">
+                <DeployFile LocalName="D:\Delphi\Icones do Projeto Adonai\Icone-da-aplicacao-150x150.png" Configuration="Debug" Class="UWP_DelphiLogo150">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets\</RemoteDir>
+                        <RemoteName>Logo150x150.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="D:\Delphi\Icones do Projeto Adonai\Icone-da-aplicacao-44x44.png" Configuration="Debug" Class="UWP_DelphiLogo44">
                     <Platform Name="Win32">
                         <RemoteDir>Assets\</RemoteDir>
                         <RemoteName>Logo44x44.png</RemoteName>

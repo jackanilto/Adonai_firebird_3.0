@@ -3519,44 +3519,33 @@
           'SIM'
           'N'#195'O')
       end
-      object EditVALOR: TEdit
-        Left = 96
-        Top = 88
-        Width = 121
-        Height = 21
-        BiDiMode = bdRightToLeft
-        ParentBiDiMode = False
-        TabOrder = 1
-        OnChange = EditVALORChange
-        OnKeyPress = EditVALORKeyPress
-      end
       object cbTRATAMENTO: TComboBox
         Left = 223
         Top = 88
         Width = 147
         Height = 21
-        TabOrder = 2
+        TabOrder = 1
       end
       object cbGRUPO: TComboBox
         Left = 504
         Top = 88
         Width = 147
         Height = 21
-        TabOrder = 3
+        TabOrder = 2
       end
       object cbMINISTERIO: TComboBox
         Left = 657
         Top = 88
         Width = 147
         Height = 21
-        TabOrder = 4
+        TabOrder = 3
       end
       object cbBATIZADO: TComboBox
         Left = 27
         Top = 48
         Width = 65
         Height = 21
-        TabOrder = 5
+        TabOrder = 4
         Items.Strings = (
           'SIM'
           'N'#195'O')
@@ -3566,14 +3555,14 @@
         Top = 48
         Width = 200
         Height = 21
-        TabOrder = 6
+        TabOrder = 5
       end
       object EditCIDADEBATISMO: TEdit
         Left = 407
         Top = 48
         Width = 200
         Height = 21
-        TabOrder = 7
+        TabOrder = 6
       end
       object MemoOBSERVACAO: TMemo
         Left = 17
@@ -3582,7 +3571,7 @@
         Height = 169
         Lines.Strings = (
           'MemoMembro')
-        TabOrder = 8
+        TabOrder = 7
       end
       object MemoHistórico: TMemo
         Left = 439
@@ -3591,35 +3580,35 @@
         Height = 169
         Lines.Strings = (
           'MemoMembro')
-        TabOrder = 9
+        TabOrder = 8
       end
       object EditPAISORIG: TEdit
         Left = 223
         Top = 160
         Width = 121
         Height = 21
-        TabOrder = 10
+        TabOrder = 9
       end
       object EditTELPAISORIG: TEdit
         Left = 363
         Top = 160
         Width = 121
         Height = 21
-        TabOrder = 11
+        TabOrder = 10
       end
       object EditCAMPO13: TEdit
         Left = 504
         Top = 160
         Width = 121
         Height = 21
-        TabOrder = 12
+        TabOrder = 11
       end
       object EditCAMPO15: TEdit
         Left = 645
         Top = 160
         Width = 121
         Height = 21
-        TabOrder = 13
+        TabOrder = 12
       end
       object DateADMISSAO: TDateTimePicker
         Left = 96
@@ -3628,7 +3617,7 @@
         Height = 21
         Date = 45038.000000000000000000
         Time = 0.744292453702655600
-        TabOrder = 14
+        TabOrder = 13
       end
       object DateCONSAGRA: TDateTimePicker
         Left = 376
@@ -3637,7 +3626,7 @@
         Height = 21
         Date = 45038.000000000000000000
         Time = 0.744588518515229200
-        TabOrder = 15
+        TabOrder = 14
       end
       object DateVALCARTEIRA: TDateTimePicker
         Left = 616
@@ -3646,7 +3635,7 @@
         Height = 21
         Date = 45038.000000000000000000
         Time = 0.745018541667377600
-        TabOrder = 16
+        TabOrder = 15
       end
       object DateBATISMO: TDateTimePicker
         Left = 104
@@ -3655,13 +3644,24 @@
         Height = 21
         Date = 45038.000000000000000000
         Time = 0.746076423609338200
+        TabOrder = 16
+      end
+      object EditVALOR: TEdit
+        Left = 96
+        Top = 88
+        Width = 121
+        Height = 21
+        BiDiMode = bdRightToLeft
+        ParentBiDiMode = False
         TabOrder = 17
+        OnChange = EditVALORChange
+        OnKeyPress = EditVALORKeyPress
       end
     end
   end
   object ImageList1: TImageList
-    Left = 316
-    Top = 4
+    Left = 348
+    Top = 12
     Bitmap = {
       494C010102000800040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
