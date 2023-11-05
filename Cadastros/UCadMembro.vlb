@@ -1,5 +1,5 @@
 ﻿[]
-Coordinates=846,1104,62,51
+Coordinates=912,1043,52,51
 Visible=True
 
 [DM.QueryGupos]
@@ -162,9 +162,6 @@ Coordinates=2167,1165,62,51
 
 [EditCOMPLEMENTO]
 Coordinates=10,1104,115,51
-
-[Label21]
-Coordinates=912,1043,52,51
 
 [EditNOMEPAI]
 Coordinates=10,1043,81,51

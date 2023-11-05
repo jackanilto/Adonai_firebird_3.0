@@ -4,11 +4,9 @@ uses
   ULogin in 'ULogin.pas' {FrmLogin},
   UDM in 'Database\UDM.pas' {DM: TDataModule},
   UPrincipal in 'UPrincipal.pas' {FrmPrincipal},
-  UCadMembro in 'Cadastros\UCadMembro.pas' {FrmCadMembro},
   UProfissoes in 'Cadastros\UProfissoes.pas' {FrmCadProfissoes},
   UGrupos in 'Cadastros\UGrupos.pas' {FrmGRUPOS},
   UTratamentos in 'Cadastros\UTratamentos.pas' {FrmTRATAMENTOS},
-  UEntraSaida in 'Movimentacoes\UEntraSaida.pas' {FormEntraSaida},
   USobre in 'USobre.pas' {FrmSobre},
   USplash in 'USplash.pas' {FrmSplash},
   VFrames in 'Win32\WebcamFiles\VFrames.pas',
@@ -28,7 +26,10 @@ uses
   Utema in 'Tema\Utema.pas' {frmTema},
   Vcl.Themes,
   Vcl.Styles,
-  UAjudaTema in 'Tema\UAjudaTema.pas' {FrmAjudaTemas};
+  UAjudaTema in 'Tema\UAjudaTema.pas' {FrmAjudaTemas},
+  UEntraDizOfertas in 'Movimentacoes\UEntraDizOfertas.pas' {FrmEntraDizOfertas},
+  uBackup in 'Database\uBackup.pas' {fBackup},
+  UCadMembroS in 'Cadastros\UCadMembroS.pas' {FrmCadMembroS};
 
 {$R *.res}
 begin
@@ -36,12 +37,9 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFrmLogin, FrmLogin);
   Application.CreateForm(TDM, DM);
-  Application.CreateForm(TFrmPrincipal, FrmPrincipal);
-  Application.CreateForm(TFrmCadMembro, FrmCadMembro);
   Application.CreateForm(TFrmCadProfissoes, FrmCadProfissoes);
   Application.CreateForm(TFrmGRUPOS, FrmGRUPOS);
   Application.CreateForm(TFrmTRATAMENTOS, FrmTRATAMENTOS);
-  Application.CreateForm(TFormEntraSaida, FormEntraSaida);
   Application.CreateForm(TFrmSobre, FrmSobre);
   Application.CreateForm(TFrmSplash, FrmSplash);
   Application.CreateForm(TFrmCarteirinha, FrmCarteirinha);
@@ -53,5 +51,9 @@ begin
   Application.CreateForm(TfrmCadIgreja, frmCadIgreja);
   Application.CreateForm(TfrmTema, frmTema);
   Application.CreateForm(TFrmAjudaTemas, FrmAjudaTemas);
+  Application.CreateForm(TFrmPrincipal, FrmPrincipal);
+  Application.CreateForm(TFrmEntraDizOfertas, FrmEntraDizOfertas);
+  Application.CreateForm(TfBackup, fBackup);
+  Application.CreateForm(TFrmCadMembroS, FrmCadMembroS);
   Application.Run;
 end.

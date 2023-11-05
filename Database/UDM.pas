@@ -1,7 +1,5 @@
 unit UDM;
-
 interface
-
 uses
   System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
@@ -9,8 +7,8 @@ uses
   FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Phys.IBBase, FireDAC.Comp.UI,
   Data.DB, FireDAC.Comp.Client, FireDAC.Stan.Param, FireDAC.DatS,
   FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet, System.Actions,
-  Vcl.ActnList, frxClass, frxDBSet, Datasnap.DBClient, jpeg, Datasnap.Provider, MidasLib;
-
+  Vcl.ActnList, frxClass, frxDBSet, Datasnap.DBClient, jpeg, Datasnap.Provider, MidasLib,
+  EAppProt;
 type
   TDM = class(TDataModule)
     FDConn: TFDConnection;
@@ -89,7 +87,6 @@ type
     TBL_MEMBROSPROFISSAO: TStringField;
     TBL_MEMBROSCIDADE_BATISMO: TStringField;
     TBL_MEMBROSOBSERVACAO: TStringField;
-    TBL_MEMBROSVALOR: TStringField;
     TBL_MEMBROSROLL: TIntegerField;
     DSAniverMes: TDataSource;
     QueryAniverMes: TFDQuery;
@@ -105,9 +102,6 @@ type
     TBL_IGREJAS: TFDTable;
     DSIgrejas: TDataSource;
     QueryIgrejas: TFDQuery;
-    TBL_IGREJASID: TIntegerField;
-    TBL_IGREJASNOME_IGREJA: TStringField;
-    TBL_IGREJASPASTA_IMG: TStringField;
     TBL_DIZIMOS: TFDTable;
     DSDIZIMOS: TDataSource;
     QueryDIZIMOS: TFDQuery;
@@ -130,10 +124,6 @@ type
     RelCarta: TfrxReport;
     RelDSDOC: TfrxDBDataset;
     RelCerfBatsimo: TfrxReport;
-    TBL_IGREJASPASTOR_PRES: TStringField;
-    TBL_IGREJASPASTOR_DIRIG: TStringField;
-    TBL_IGREJASCONTATO: TStringField;
-    TBL_IGREJASENDERECO: TStringField;
     QueryIgrejasID: TIntegerField;
     QueryIgrejasNOME_IGREJA: TStringField;
     QueryIgrejasPASTA_IMG: TStringField;
@@ -143,24 +133,99 @@ type
     QueryIgrejasENDERECO: TStringField;
     RelAnivCasa: TfrxReport;
     RelCerfBatsimo2: TfrxReport;
-    QueryDIZIMOSID_DIZIMO: TIntegerField;
-    QueryDIZIMOSID: TIntegerField;
-    QueryDIZIMOSNOME: TStringField;
-    QueryDIZIMOSDATA: TStringField;
-    QueryDIZIMOSFORMA: TStringField;
-    QueryDIZIMOSOBS: TStringField;
-    QueryDIZIMOSTIPO: TStringField;
-    QueryDIZIMOSROLL: TIntegerField;
-    QueryDIZIMOSVALOR: TFMTBCDField;
+    TBL_ENTRADAS: TFDTable;
+    DSEntradas: TDataSource;
+    QueryEntradas: TFDQuery;
+    TBL_ENTRADASNOME: TStringField;
+    TBL_ENTRADASVALOR: TFMTBCDField;
+    TBL_ENTRADASID: TIntegerField;
+    QueryEntradasNOME: TStringField;
+    QueryEntradasVALOR: TFMTBCDField;
+    QueryEntradasID: TIntegerField;
+    TBL_IGREJASID: TIntegerField;
+    TBL_IGREJASNOME_IGREJA: TStringField;
+    TBL_IGREJASPASTA_IMG: TStringField;
+    TBL_IGREJASPASTOR_PRES: TStringField;
+    TBL_IGREJASPASTOR_DIRIG: TStringField;
+    TBL_IGREJASCONTATO: TStringField;
+    TBL_IGREJASENDERECO: TStringField;
     TBL_DIZIMOSID_DIZIMO: TIntegerField;
-    TBL_DIZIMOSID: TIntegerField;
-    TBL_DIZIMOSNOME: TStringField;
-    TBL_DIZIMOSDATA: TStringField;
-    TBL_DIZIMOSFORMA: TStringField;
-    TBL_DIZIMOSOBS: TStringField;
-    TBL_DIZIMOSTIPO: TStringField;
     TBL_DIZIMOSROLL: TIntegerField;
+    TBL_DIZIMOSNOME: TStringField;
     TBL_DIZIMOSVALOR: TFMTBCDField;
+    TBL_DIZIMOSFORMA: TStringField;
+    TBL_DIZIMOSTIPO: TStringField;
+    TBL_DIZIMOSOBS: TStringField;
+    TBL_DIZIMOSID: TIntegerField;
+    TBL_DIZIMOSDATA: TDateField;
+    QueryDIZIMOSID_DIZIMO: TIntegerField;
+    QueryDIZIMOSROLL: TIntegerField;
+    QueryDIZIMOSNOME: TStringField;
+    QueryDIZIMOSVALOR: TFMTBCDField;
+    QueryDIZIMOSFORMA: TStringField;
+    QueryDIZIMOSTIPO: TStringField;
+    QueryDIZIMOSOBS: TStringField;
+    QueryDIZIMOSID: TIntegerField;
+    QueryDIZIMOSDATA: TDateField;
+    QDiacono: TFDQuery;
+    QDiaca: TFDQuery;
+    QPresb: TFDQuery;
+    QMembro: TFDQuery;
+    QPastor: TFDQuery;
+    QEvang: TFDQuery;
+    QueryGuposID: TIntegerField;
+    QueryGuposNOME_GRUPO: TStringField;
+    QueryMembroID: TIntegerField;
+    QueryMembroROLL: TIntegerField;
+    QueryMembroNOME: TStringField;
+    QueryMembroNUMERO: TStringField;
+    QueryMembroBAIRRO: TStringField;
+    QueryMembroCIDADE: TStringField;
+    QueryMembroESTADO: TStringField;
+    QueryMembroCEP: TStringField;
+    QueryMembroCOMPLEMENTO: TStringField;
+    QueryMembroTELPESSOAL: TStringField;
+    QueryMembroCONTATO1: TStringField;
+    QueryMembroCONTATO2: TStringField;
+    QueryMembroEMAIL: TStringField;
+    QueryMembroDIZIMISTA: TStringField;
+    QueryMembroGRUPO: TStringField;
+    QueryMembroTRATAMENTO: TStringField;
+    QueryMembroOBS: TStringField;
+    QueryMembroSEXO: TStringField;
+    QueryMembroESTADO_CIVIL: TStringField;
+    QueryMembroMINISTERIO: TStringField;
+    QueryMembroGRAU_ESCOLARIDADE: TStringField;
+    QueryMembroBATIZADO: TStringField;
+    QueryMembroRG: TStringField;
+    QueryMembroCPF: TStringField;
+    QueryMembroNOME_PAI: TStringField;
+    QueryMembroNOME_MAE: TStringField;
+    QueryMembroPAIS_ORIGEM: TStringField;
+    QueryMembroTELEFONE_PAIS_ORIGEM: TStringField;
+    QueryMembroATIVO: TStringField;
+    QueryMembroIGREJA_BATISMO: TStringField;
+    QueryMembroNATURALIDADE: TStringField;
+    QueryMembroTITULO_ELEITOR: TStringField;
+    QueryMembroFILHOS: TStringField;
+    QueryMembroCONJUGE: TStringField;
+    QueryMembroCAMPO13: TStringField;
+    QueryMembroTIPO_MORADIA: TStringField;
+    QueryMembroHISTORICO: TStringField;
+    QueryMembroPROFISSAO: TStringField;
+    QueryMembroCIDADE_BATISMO: TStringField;
+    QueryMembroOBSERVACAO: TStringField;
+    QueryMembroDATA_NASC: TDateField;
+    QueryMembroDATEBATISMO: TDateField;
+    QueryMembroDATEVALCARTEIRA: TDateField;
+    QueryMembroDATEADMISSAO: TDateField;
+    QueryMembroDATECONSAGRA: TDateField;
+    QueryMembroDATECASAMENTO: TDateField;
+    QueryMembroDATENASCCONJUGE: TDateField;
+    QueryMembroDATA_BATISMO: TDateField;
+    QueryMembroIMAGEM: TStringField;
+    QueryMembroENDERECO: TStringField;
+    QueryMembroCAMPO15: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure QueryAniverMesFilterRecord(DataSet: TDataSet;
       var Accept: Boolean);
@@ -169,19 +234,13 @@ type
   public
     { Public declarations }
   end;
-
 var
   DM: TDM;
   MesFiltrado:string;
-
 implementation
-
 {%CLASSGROUP 'Vcl.Controls.TControl'}
-
-uses ULogin, UProfissoes, UCadMembro;
-
+uses ULogin, UProfissoes, UCadMembroS;
 {$R *.dfm}
-
 procedure TDM.DataModuleCreate(Sender: TObject);
 begin
 FDConn.Connected := true;
@@ -202,6 +261,5 @@ begin
   if mes = StrToInt (MesFiltrado) then
   Accept := true;
 end;
-
 
 end.

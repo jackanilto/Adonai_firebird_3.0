@@ -40,7 +40,7 @@ implementation
 
 {$R *.dfm}
 
-uses UDM, UCadMembro, ULogin, UPrincipal;
+uses UDM, UCadMembroS, ULogin, UPrincipal;
 
 { TFrmCadProfissoes }
 

@@ -30,6 +30,6 @@ implementation
 
 {$R *.dfm}
 
-uses UCadMembro, UDM, UGrupos, ULogin, UPrincipal, UProfissoes;
+uses UCadMembroS, UDM, UGrupos, ULogin, UPrincipal, UProfissoes;
 
 end.

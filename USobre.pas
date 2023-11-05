@@ -10,18 +10,20 @@ uses
 type
   TFrmSobre = class(TForm)
     Image1: TImage;
-    Label1: TLabel;
-    SpeedButton1: TSpeedButton;
-    SpeedButton2: TSpeedButton;
-    SpeedButton3: TSpeedButton;
+    LabelInicioFim: TLabel;
+    BtnRenovar: TSpeedButton;
+    BtnVisitarSite: TSpeedButton;
+    BtnWhatsApp: TSpeedButton;
     Image2: TImage;
-    Label2: TLabel;
-    EvAppProtect1: TEvAppProtect;
+    LabelDiasResta: TLabel;
+    WindowsSync: TEvAppProtect;
+    ImgChaves: TImage;
+    Label1: TLabel;
     procedure FormActivate(Sender: TObject);
-    procedure SpeedButton1Click(Sender: TObject);
+    procedure BtnRenovarClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure SpeedButton2Click(Sender: TObject);
-    procedure SpeedButton3Click(Sender: TObject);
+    procedure BtnVisitarSiteClick(Sender: TObject);
+    procedure BtnWhatsAppClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -36,16 +38,16 @@ implementation
 
 {$R *.dfm}
 
-uses UPrincipal, ShellApi, DateUtils, UITypes;
+uses UPrincipal, ShellApi, DateUtils, UITypes, UAlerta;
 
 
 procedure TFrmSobre.FormActivate(Sender: TObject);
 begin
-  Label1.Caption := 'Inicio da Licença  -  ' + FormatDateTime('dd/mm/yyyy', EvAppProtect1.DateStart) + #13 +
-                    'Licença ativa até  -  ' + FormatDateTime('dd/mm/yyyy', EvAppProtect1.DateEnd);
+  LabelInicioFim.Caption := 'Inicio da Licença  -  ' + FormatDateTime('dd/mm/yyyy', WindowsSync.DateStart) + #13 +
+                    'Licença ativa até  -  ' + FormatDateTime('dd/mm/yyyy', WindowsSync.DateEnd);
 
 
-  Label2.Caption := 'Faltam ' + IntToStr(DaysBetween( Today, EvAppProtect1.DateEnd))+' dias para expirar sua licença';
+  LabelDiasResta.Caption := 'Faltam ' + IntToStr(DaysBetween( Today, WindowsSync.DateEnd))+' dias para expirar sua licença';
 
 end;
 
@@ -54,28 +56,26 @@ const
  Msg = 'Faltam menos de 10 dias para a licença expirar. '+ #13 +
  'Deseja renovar agora?';
 begin
-  if ((EvAppProtect1.DateEnd - Date) < 10) and
+  if ((WindowsSync.DateEnd - Date) < 10) and
     (MessageDlg(Msg, mtConfirmation, mbYesNoCancel, 0) = mrYes) then
-    EvAppProtect1.ResetLockApplication;
-
-
+    WindowsSync.ResetLockApplication;
 
 end;
 
-procedure TFrmSobre.SpeedButton1Click(Sender: TObject);
+procedure TFrmSobre.BtnRenovarClick(Sender: TObject);
 begin
-EvAppProtect1.ResetLockApplication;
+WindowsSync.ResetLockApplication;
 end;
 
-procedure TFrmSobre.SpeedButton2Click(Sender: TObject);
+procedure TFrmSobre.BtnVisitarSiteClick(Sender: TObject);
 var
   ConsultaEndereco: string;
 begin
-  ConsultaEndereco := 'https://www.jncenter.com.br';
+  ConsultaEndereco := 'https://www.jncsolucoes.com.br';
   ShellExecute(0, 'open', PCHar(ConsultaEndereco), nil, nil, SW_SHOWNORMAL);
 end;
 
-procedure TFrmSobre.SpeedButton3Click(Sender: TObject);
+procedure TFrmSobre.BtnWhatsAppClick(Sender: TObject);
 var
   ConsultaEndereco: string;
 begin

@@ -60,6 +60,14 @@ type
     LabelTotalPRESBITERO: TLabel;
     LabelTotalDIACONISA: TLabel;
     Label10: TLabel;
+    N3: TMenuItem;
+    SpeedButton3: TSpeedButton;
+    SpeedButton4: TSpeedButton;
+    CadMembroNovo: TSpeedButton;
+    Label1: TLabel;
+    LabelTotalPASTOR: TLabel;
+    Label2: TLabel;
+    LabelTotalEVANGELISTA: TLabel;
     // EvSplashScreen1: TEvSplashScreen;
     procedure Button1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -86,6 +94,9 @@ type
     procedure btnLogOffClick(Sender: TObject);
     //Restaura função que restaura o som BEEP do sistema operacional
     procedure RestauraBeepWindows;
+    procedure SpeedButton3Click(Sender: TObject);
+    procedure SpeedButton4Click(Sender: TObject);
+    procedure CadMembroNovoClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -99,8 +110,8 @@ implementation
 
 {$R *.dfm}
 
-uses UDM, ULogin, UCadMembro, UProfissoes, UGrupos, UTratamentos, USobre,
-  UDocumentos, UCadIgreja, Utema;
+uses UDM, ULogin, UProfissoes, UGrupos, UTratamentos, USobre,
+  UDocumentos, UCadIgreja, Utema, UEntraDizOfertas, uBackup, UCadMembroS;
 
 procedure TFrmPrincipal.btnGRUPOSClick(Sender: TObject);
 begin
@@ -122,6 +133,11 @@ end;
 procedure TFrmPrincipal.Cadastrodaigreja1Click(Sender: TObject);
 begin
   frmCadIgreja.ShowModal;
+end;
+
+procedure TFrmPrincipal.CadMembroNovoClick(Sender: TObject);
+begin
+    FrmCadMembroS.ShowModal;
 end;
 
 procedure TFrmPrincipal.Calculadora1Click(Sender: TObject);
@@ -148,15 +164,16 @@ begin
   Application.Terminate;
 end;
 
+
 procedure TFrmPrincipal.FormShow(Sender: TObject);
 // Abre form full Screen ( precisa configurar BorderStyle = bsSigle ou none )
 var
   r: TRect;
-  TotalDIACONO: Integer;
-  TotalPRESBITERO: Integer;
-  TotalDIACONISA: Integer;
-  TotalMEMBROS: Integer;
+  TotalDIACONO, TotalDIACONISA, TotalPRESBITERO,  TotalMEMBROS,   TotaleVANGELISTA, TotalPASTOR: Integer;
 begin
+   // Mostrar icone da aplicação na barra de tarefas
+  Application.ShowMainForm := True;
+
   //Reabilita som Beep do Windows
   RestauraBeepWindows;
   // Mostra o user logado no sistema
@@ -167,67 +184,80 @@ begin
   CalendarView1.Date := Now;
 
    // Consultar a tabela TBL_MEMBROS para contar os membros com o tratamento "DIACONO"
-  DM.QueryMembro.Close;
-  DM.QueryMembro.SQL.Clear;
-  DM.QueryMembro.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''DIACONO''');
-  DM.QueryMembro.Open;
+  DM.QDiacono.Close;
+  DM.QDiacono.SQL.Clear;
+  DM.QDiacono.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''DIÁCONO''');
+  DM.QDiacono.Open;
 
   // Obter o total de registros encontrados
-  TotalDIACONO := DM.QueryMembro.Fields[0].AsInteger;
+  TotalDIACONO := DM.QDiacono.Fields[0].AsInteger;
 
   // Exibir o Resultado no componente visual, por exemplo, em um Label
   LabelTotalDIACONO.Caption := IntToStr(TotalDIACONO);
 
-   // Consultar a tabela TBL_MEMBROS para contar os membros com o tratamento "PRESBITERO"
-  DM.QueryMembro.Close;
-  DM.QueryMembro.SQL.Clear;
-  DM.QueryMembro.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''PRESBITERO''');
-  DM.QueryMembro.Open;
+      // Consultar a tabela TBL_MEMBROS para contar os membros com o tratamento "DIACONISA"
+  DM.QDiaca.Close;
+  DM.QDiaca.SQL.Clear;
+  DM.QDiaca.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''DIACONISA''');
+  DM.QDiaca.Open;
 
   // Obter o total de registros encontrados
-  TotalPRESBITERO := DM.QueryMembro.Fields[0].AsInteger;
+  TotalDIACONISA := DM.QDiaca.Fields[0].AsInteger;
+
+  // Exibir o Resultado no componente visual, por exemplo, em um Label
+  LabelTotalDIACONISA.Caption := IntToStr(TotalDIACONISA);
+
+
+   // Consultar a tabela TBL_MEMBROS para contar os membros com o tratamento "PRESBITERO"
+  DM.QPresb.Close;
+  DM.QPresb.SQL.Clear;
+  DM.QPresb.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''PRESBÍTERO''');
+  DM.QPresb.Open;
+
+  // Obter o total de registros encontrados
+  TotalPRESBITERO := DM.QPresb.Fields[0].AsInteger;
 
   // Exibir o Resultado no componente visual, por exemplo, em um Label
   LabelTotalPRESBITERO.Caption := IntToStr(TotalPRESBITERO);
 
 
-   // Consultar a tabela TBL_MEMBROS para contar os membros com o tratamento "DIACONISA"
-  DM.QueryMembro.Close;
-  DM.QueryMembro.SQL.Clear;
-  DM.QueryMembro.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''DIACONISA''');
-  DM.QueryMembro.Open;
+  // Consultar a tabela TBL_MEMBROS para contar o total de registros
+  DM.QMembro.Close;
+  DM.QMembro.SQL.Clear;
+  DM.QMembro.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS');
+  DM.QMembro.Open;
 
   // Obter o total de registros encontrados
-  TotalDIACONISA := DM.QueryMembro.Fields[0].AsInteger;
-
-  // Exibir o Resultado no componente visual, por exemplo, em um Label
-  LabelTotalDIACONISA.Caption := IntToStr(TotalDIACONISA);
-
-
-   // Consultar a tabela TBL_MEMBROS para contar os membros com o tratamento "DIACONISA"
-  DM.QueryMembro.Close;
-  DM.QueryMembro.SQL.Clear;
-  DM.QueryMembro.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''DIACONISA''');
-  DM.QueryMembro.Open;
-
-  // Obter o total de registros encontrados
-  TotalDIACONISA := DM.QueryMembro.Fields[0].AsInteger;
-
-  // Exibir o Resultado no componente visual, por exemplo, em um Label
-  LabelTotalDIACONISA.Caption := IntToStr(TotalDIACONISA);
-
-
-    // Consultar a tabela TBL_MEMBROS para contar o total de registros
-  DM.QueryMembro.Close;
-  DM.QueryMembro.SQL.Clear;
-  DM.QueryMembro.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS');
-  DM.QueryMembro.Open;
-
-  // Obter o total de registros encontrados
-  TotalMembros := DM.QueryMembro.Fields[0].AsInteger;
+  TotalMembros := DM.QMembro.Fields[0].AsInteger;
 
   // Exibir o total no componente visual, por exemplo, em um Label
   LabelTotalMembros.Caption := IntToStr(TotalMembros);
+
+
+   // Consultar a tabela TBL_MEMBROS para contar os membros com o tratamento "EVANGELISTA"
+  DM.QEvang.Close;
+  DM.QEvang.SQL.Clear;
+  DM.QEvang.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''EVANGELISTA''');
+  DM.QEvang.Open;
+
+  // Obter o total de registros encontrados
+  TotalEVANGELISTA := DM.QEvang.Fields[0].AsInteger;
+
+  // Exibir o Resultado no componente visual, por exemplo, em um Label
+  LabelTotalEVANGELISTA.Caption := IntToStr(TotalEVANGELISTA);
+
+
+   // Consultar a tabela TBL_MEMBROS para contar os membros com o tratamento "PRESBITERO"
+  DM.QPastor.Close;
+  DM.QPastor.SQL.Clear;
+  DM.QPastor.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''PASTOR''');
+  DM.QPastor.Open;
+
+  // Obter o total de registros encontrados
+  TotalPASTOR := DM.QPastor.Fields[0].AsInteger;
+
+  // Exibir o Resultado no componente visual, por exemplo, em um Label
+  LabelTotalPASTOR.Caption := IntToStr(TotalPASTOR);
 
 
 
@@ -240,7 +270,7 @@ end;
 
 procedure TFrmPrincipal.Membros1Click(Sender: TObject);
 begin
-  FrmCadMembro.ShowModal;
+  FrmCadMembroS.ShowModal;
 end;
 
 procedure TFrmPrincipal.N2Click(Sender: TObject);
@@ -277,7 +307,7 @@ end;
 
 procedure TFrmPrincipal.btnADDMEmbroClick(Sender: TObject);
 begin
-  FrmCadMembro.ShowModal;
+  FrmCadMembroS.ShowModal;
 end;
 
 procedure TFrmPrincipal.SpeedButton1Click(Sender: TObject);
@@ -290,6 +320,16 @@ begin
   Application.Terminate;
   DM.FDConn.Connected := False; // Desconecta o Firebird ao sair
   // DM.Free;
+end;
+
+procedure TFrmPrincipal.SpeedButton3Click(Sender: TObject);
+begin
+  FrmEntraDizOfertas.ShowModal;
+end;
+
+procedure TFrmPrincipal.SpeedButton4Click(Sender: TObject);
+begin
+ fBackup.ShowModal;
 end;
 
 procedure TFrmPrincipal.btnDocumentosClick(Sender: TObject);

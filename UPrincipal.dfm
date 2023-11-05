@@ -16,6 +16,29 @@ object FrmPrincipal: TFrmPrincipal
   Position = poScreenCenter
   OnShow = FormShow
   TextHeight = 13
+  object SpeedButton3: TSpeedButton
+    Left = 320
+    Top = 256
+    Width = 113
+    Height = 65
+    OnClick = SpeedButton3Click
+  end
+  object SpeedButton4: TSpeedButton
+    Left = 184
+    Top = 264
+    Width = 97
+    Height = 57
+    Caption = 'Fazer Backup'
+    OnClick = SpeedButton4Click
+  end
+  object CadMembroNovo: TSpeedButton
+    Left = 81
+    Top = 264
+    Width = 97
+    Height = 57
+    Caption = 'Cad de Membros'
+    OnClick = CadMembroNovoClick
+  end
   object PanelMenuDireita: TPanel
     Left = 835
     Top = 73
@@ -4233,7 +4256,6 @@ object FrmPrincipal: TFrmPrincipal
     Height = 578
     Align = alRight
     TabOrder = 2
-    ExplicitLeft = 633
     object GroupBox1: TGroupBox
       Left = 9
       Top = 12
@@ -4278,7 +4300,7 @@ object FrmPrincipal: TFrmPrincipal
       Left = 9
       Top = 79
       Width = 185
-      Height = 105
+      Height = 162
       Caption = 'Total de Obreiros'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -4290,9 +4312,9 @@ object FrmPrincipal: TFrmPrincipal
       object LabelTotalDIACONO: TLabel
         Left = 96
         Top = 28
-        Width = 120
+        Width = 57
         Height = 14
-        Caption = 'LabelTotalDIACONO'
+        Caption = 'DIACONO'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -4315,7 +4337,7 @@ object FrmPrincipal: TFrmPrincipal
       end
       object Label7: TLabel
         Left = 5
-        Top = 53
+        Top = 82
         Width = 73
         Height = 16
         Caption = 'Presb'#237'tero:'
@@ -4328,10 +4350,10 @@ object FrmPrincipal: TFrmPrincipal
       end
       object LabelTotalPRESBITERO: TLabel
         Left = 96
-        Top = 53
-        Width = 140
+        Top = 82
+        Width = 77
         Height = 14
-        Caption = 'LabelTotalPRESBITERO'
+        Caption = 'PRESBITERO'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -4341,10 +4363,10 @@ object FrmPrincipal: TFrmPrincipal
       end
       object LabelTotalDIACONISA: TLabel
         Left = 96
-        Top = 79
-        Width = 133
+        Top = 55
+        Width = 70
         Height = 14
-        Caption = 'LabelTotalDIACONISA'
+        Caption = 'DIACONISA'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -4354,13 +4376,65 @@ object FrmPrincipal: TFrmPrincipal
       end
       object Label10: TLabel
         Left = 5
-        Top = 79
+        Top = 55
         Width = 66
         Height = 16
         Caption = 'Di'#225'conisa:'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label1: TLabel
+        Left = 5
+        Top = 133
+        Width = 48
+        Height = 14
+        Caption = 'Pastor: '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object LabelTotalPASTOR: TLabel
+        Left = 96
+        Top = 133
+        Width = 50
+        Height = 14
+        Caption = 'PASTOR'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label2: TLabel
+        Left = 5
+        Top = 107
+        Width = 73
+        Height = 14
+        Caption = 'Evangelista:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object LabelTotalEVANGELISTA: TLabel
+        Left = 96
+        Top = 107
+        Width = 83
+        Height = 14
+        Caption = 'EVANGELISTA'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
@@ -5001,7 +5075,7 @@ object FrmPrincipal: TFrmPrincipal
         OnClick = Encerrar1Click
       end
     end
-    object TMenuItem
+    object N3: TMenuItem
     end
     object TMenuItem
     end

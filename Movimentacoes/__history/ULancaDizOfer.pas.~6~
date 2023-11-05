@@ -1,0 +1,135 @@
+unit ULancaDizOfer;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.ComCtrls, Vcl.StdCtrls,
+  Vcl.Grids, Vcl.DBGrids, Vcl.Buttons;
+
+type
+  TFrmLancaDizOfer = class(TForm)
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    LabelOBS: TLabel;
+    btnBUSCAR: TSpeedButton;
+    Label8: TLabel;
+    btnNovo: TBitBtn;
+    BtnSalvar: TBitBtn;
+    btnEditar: TBitBtn;
+    btnDeletar: TBitBtn;
+    DBGridDIZIMOS: TDBGrid;
+    EditNOME: TEdit;
+    EditVALDIZIMO: TEdit;
+    CBFormas: TComboBox;
+    MemoOBSERVACAO: TMemo;
+    cbTipo: TComboBox;
+    DateDIZIMO: TDateTimePicker;
+    procedure btnNovoClick(Sender: TObject);
+    procedure BtnSalvarClick(Sender: TObject);
+  private
+    { Private declarations }
+
+  public
+    { Public declarations }
+    procedure limparCampos;
+    procedure habilitarCampos;
+    procedure desabilitarCampos;
+    procedure buscarTudo;
+    procedure associarCampos;
+  end;
+
+var
+  FrmLancaDizOfer: TFrmLancaDizOfer;
+
+implementation
+
+{$R *.dfm}
+
+uses UPrincipal, UDM;
+
+procedure TFrmLancaDizOfer.associarCampos;
+begin
+  DM.TBL_DIZIMOS.FieldByName('NOME').AsString   := EditNOME.Text;
+  DM.TBL_DIZIMOS.FieldByName('DATA').AsDateTime := DateDIZIMO.Date;
+  DM.TBL_DIZIMOS.FieldByName('FORMA').AsString  := CBFormas.Text;
+  DM.TBL_DIZIMOS.FieldByName('TIPO').AsString   := cbTipo.Text;
+  DM.TBL_DIZIMOS.FieldByName('VALOR').AsString  := EditVALDIZIMO.Text;
+end;
+
+procedure TFrmLancaDizOfer.btnNovoClick(Sender: TObject);
+  begin
+  limparCampos;
+  habilitarCampos;
+  dm.TBL_DIZIMOS.Insert;
+  BtnSalvar.Enabled := true;
+  btnNovo.Enabled := false;
+
+  btnEditar.Enabled := false;
+  btnDeletar.Enabled := false;
+  end;
+
+procedure TFrmLancaDizOfer.BtnSalvarClick(Sender: TObject);
+begin
+  if (EditNOME.Text <> '') then
+  begin
+    //associarCampos;
+    DM.TBL_DIZIMOS.Post;
+    MessageDlg('Salvo com Sucesso!!', mtInformation, mbOKCancel, 0);
+   // buscarTudo;
+    //desabilitarCampos;
+    //btnBUSCAR.Enabled := false;
+    btnSalvar.Enabled := false;
+    btnNovo.Enabled := true;
+    btnEditar.Enabled := false;
+    btnDeletar.Enabled := false;
+    DBGridDIZIMOS.Enabled := true;
+    end
+    else
+    begin
+    MessageDlg('Preencha os Campos', mtInformation, mbOKCancel, 0);
+  end;
+end;
+
+procedure TFrmLancaDizOfer.buscarTudo;
+  begin
+    DM.QueryMembro.Close;
+    DM.QueryMembro.SQL.Clear;
+    DM.QueryMembro.SQL.Add('select * from TBL_DIZIMOS');
+    DM.QueryMembro.Open();
+  end;
+
+procedure TFrmLancaDizOfer.desabilitarCampos;
+  begin
+   limparCampos;
+   EditNOME     .Enabled := False;
+   //DateDIZIMO   .Date;
+   CBFormas     .Enabled := False;
+   cbTipo       .Enabled := False;
+   EditVALDIZIMO.Enabled := False;
+  end;
+
+procedure TFrmLancaDizOfer.habilitarCampos;
+  begin
+  limparCampos;
+   EditNOME     .Enabled := True;
+   DateDIZIMO   .Date;
+   CBFormas     .Enabled := True;
+   cbTipo       .Enabled := True;
+   EditVALDIZIMO.Enabled := True;
+
+
+  end;
+
+procedure TFrmLancaDizOfer.limparCampos;
+  begin
+     EditNOME.Text     := '';
+     //DateDIZIMO.Date   := '';
+     CBFormas.Text     := '';
+     cbTipo.Text       := '';
+     EditVALDIZIMO.Text:= '';
+  end;
+
+end.

@@ -49,22 +49,34 @@ uses UDM, UPrincipal, Utema, IniFiles, Vcl.Themes;
 
 // inicio do login
 procedure TFrmLogin.BtnLoginClick(Sender: TObject);
-// Verifica o dados na tabela Acesso
 begin
+  if not Assigned(DM) then
+  begin
+    ShowMessage('Erro: DM (Data Module) não está atribuído.');
+    Exit;
+  end;
+
+  if not Assigned(DM.TblAcesso) then
+  begin
+    ShowMessage('Erro: TblAcesso não está atribuída no Data Module (DM).');
+    Exit;
+  end;
+
+  if (EdtUser.Text = '') or (EdtSenha.Text = '') then
+  begin
+    ShowMessage('Preencha os campos Login e Senha.');
+    Exit;
+  end;
+
   DM.TblAcesso.Open();
   if (DM.TblAcesso.Locate('USUARIO', EdtUser.Text, [])) and
     (DM.TblAcesso.Locate('SENHA', EdtSenha.Text, [])) then
-  Begin
+  begin
     FrmPrincipal.Show;
     FrmLogin.Hide;
-  End
-  // Verifica se foram preencidos os campos Login e Senha e exibe o alerta
-  else if (EdtUser.Text = '') and (EdtSenha.Text = '') then
-    ShowMessage('Preencha os campos Login e Senha')
-    // Caso esteja vazio, exiba msg
+  end
   else
-    MessageDlg('Login ou senha inválidos', mtError, [mbOk], 0);
-  // Caso de digitação errada
+    MessageDlg('Login ou senha inválidos', mtError, [mbOK], 0);
 end;
 
 // Fim do codigo login

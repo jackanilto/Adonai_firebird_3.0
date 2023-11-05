@@ -1,0 +1,324 @@
+unit UEntradas;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Data.DB,
+  Vcl.Grids, Vcl.DBGrids;
+
+type
+  TFrmEntradas = class(TForm)
+    btnNovo: TBitBtn;
+    BtnSalvar: TBitBtn;
+    btnEditar: TBitBtn;
+    btnDeletar: TBitBtn;
+    EditNOME: TEdit;
+    EditVALDIZIMO: TEdit;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label1: TLabel;
+    EditID: TEdit;
+    DBGridENTRADAS: TDBGrid;
+    procedure btnNovoClick(Sender: TObject);
+    procedure BtnSalvarClick(Sender: TObject);
+    procedure btnEditarClick(Sender: TObject);
+    procedure btnDeletarClick(Sender: TObject);
+    procedure DBGridENTRADASCellClick(Column: TColumn);
+    procedure FormShow(Sender: TObject);
+    procedure EditVALDIZIMOChange(Sender: TObject);
+    procedure DBGridENTRADASDrawDataCell(Sender: TObject; const Rect: TRect;
+      Field: TField; State: TGridDrawState);
+    procedure EditVALDIZIMOKeyPress(Sender: TObject; var Key: Char);
+    procedure EditVALDIZIMOEnter(Sender: TObject);
+    procedure DBGridENTRADASDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+  private
+    { Private declarations }
+    FFormattingValue: Boolean;
+  public
+    { Public declarations }
+   procedure limparCampos();
+   procedure habilitarCampos();
+   procedure desabilitarCampos();
+   procedure buscarTudo();
+   procedure associarCampos();
+  end;
+
+var
+  FrmEntradas: TFrmEntradas;
+
+implementation
+
+{$R *.dfm}
+
+uses UDM, UPrincipal;
+
+procedure TFrmEntradas.associarCampos;
+begin
+   DM.TBL_ENTRADAS.FieldByName('NOME')       .AsString   := EditNOME.Text;
+   DM.TBL_ENTRADAS.FieldByName('VALOR')      .Value   := EditVALDIZIMO.Text;
+end;
+
+
+
+
+procedure TFrmEntradas.btnDeletarClick(Sender: TObject);
+var
+  SelectedID: Integer;
+begin
+  if Messagedlg('Deseja excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    if TryStrToInt(EditID.Text, SelectedID) then
+    begin
+      try
+        DM.QueryEntradas.Close;
+        DM.QueryEntradas.SQL.Clear;
+        DM.QueryEntradas.SQL.Add('DELETE FROM TBL_ENTRADAS WHERE ID = :ID');
+        DM.QueryEntradas.ParamByName('ID').AsInteger := SelectedID;
+        DM.QueryEntradas.ExecSql;
+        buscarTudo;
+        MessageDlg('Excluído com Sucesso!!', mtInformation, [mbOK], 0);
+        DM.TBL_ENTRADAS.Refresh;
+      except
+        on E: Exception do
+          MessageDlg('Erro ao excluir o registro: ' + E.Message, mtError, [mbOK], 0);
+      end;
+
+      btnSalvar.Enabled := false;
+      btnEditar.Enabled := false;
+      btnDeletar.Enabled := false;
+      btnNovo.Enabled := true;
+      DBGridENTRADAS.Enabled := true;
+    end
+    else
+    begin
+      MessageDlg('ID do registro não é válido. Certifique-se de inserir um número válido.', mtInformation, [mbOK], 0);
+    end;
+  end;
+end;
+
+
+
+
+
+
+procedure TFrmEntradas.btnEditarClick(Sender: TObject);
+var
+  ValorDizimo: Double;
+begin
+  if (EditNOME.Text <> '') then
+  begin
+    if TryStrToFloat(EditVALDIZIMO.Text, ValorDizimo) then
+    begin
+      try
+        associarCampos;
+        DM.QueryEntradas.Close;
+        DM.QueryEntradas.SQL.Clear;
+        DM.QueryEntradas.SQL.Add('UPDATE TBL_ENTRADAS SET NOME = :NOME, VALOR = :VALOR WHERE ID = :ID');
+        DM.QueryEntradas.ParamByName('NOME').AsString := EditNOME.Text;
+        DM.QueryEntradas.ParamByName('VALOR').AsFloat := ValorDizimo;
+        DM.QueryEntradas.ParamByName('ID').Value := EditID.Text;
+        DM.QueryEntradas.ExecSql;
+        MessageDlg('Editado com Sucesso!!', mtInformation, mbOKCancel, 0);
+        buscarTudo;
+      except
+        on E: Exception do
+          MessageDlg('Erro ao editar o registro: ' + E.Message, mtError, [mbOK], 0);
+      end;
+
+      btnSalvar.Enabled := false;
+      btnEditar.Enabled := false;
+      btnDeletar.Enabled := false;
+      btnNovo.Enabled := true;
+      DBGridENTRADAS.Enabled := true;
+    end
+    else
+    begin
+      MessageDlg('O valor do Dízimo não é válido. Certifique-se de inserir um número válido.', mtInformation, mbOKCancel, 0);
+    end;
+  end
+  else
+  begin
+    MessageDlg('Preencha os Campos', mtInformation, mbOKCancel, 0);
+  end;
+end;
+
+procedure TFrmEntradas.btnNovoClick(Sender: TObject);
+begin
+  // Desabilita o DBGrid durante a edição
+  DBGridENTRADAS.Enabled := false;
+  // Coloque o foco no campo Nome
+  EditNOME.SetFocus;
+  habilitarCampos();
+  limparCampos();
+  DM.TBL_ENTRADAS.Append; // Use Append para inserir um novo registro
+  BtnSalvar.Enabled := true;
+  btnNovo.Enabled := true;
+  btnEditar.Enabled := true;
+  btnDeletar.Enabled := false;
+end;
+
+procedure TFrmEntradas.BtnSalvarClick(Sender: TObject);
+begin
+  if (EditNOME.Text <> '') then
+  begin
+    associarCampos;
+    DM.TBL_ENTRADAS.Post; // Use Post para aplicar a inserção
+    MessageDlg('Salvo com Sucesso!!', mtInformation, mbOKCancel, 0);
+
+    desabilitarCampos;
+    buscarTudo;
+    limparCampos();
+    //btnBUSCAR.Enabled := false;
+    btnSalvar.Enabled := false;
+    btnNovo.Enabled := true;
+    btnEditar.Enabled := false;
+    btnDeletar.Enabled := false;
+    DBGridENTRADAS.Enabled := true;
+  end
+  else
+  begin
+    MessageDlg('Preencha os Campos', mtInformation, mbOKCancel, 0);
+  end;
+end;
+procedure TFrmEntradas.buscarTudo;
+begin
+  DM.QueryEntradas.Close;
+  DM.QueryEntradas.SQL.Clear;
+  DM.QueryEntradas.SQL.Add('select * from TBL_ENTRADAS');
+  DM.QueryEntradas.Open();
+end;
+
+procedure TFrmEntradas.DBGridENTRADASCellClick(Column: TColumn);
+begin
+  DM.TBL_ENTRADAS.Edit;
+  btnEditar.Enabled := true;
+  btnDeletar.Enabled := true;
+  habilitarCampos;
+
+  if not DM.QueryEntradas.IsEmpty then
+  begin
+    if DM.QueryEntradas.FieldByName('ID').Value <> null then
+      EditID.Text := DM.QueryEntradas.FieldByName('ID').AsString;
+
+    if DM.QueryEntradas.FieldByName('NOME').Value <> null then
+      EditNOME.Text := DM.QueryEntradas.FieldByName('NOME').AsString;
+
+    if DM.QueryEntradas.FieldByName('VALOR').Value <> null then
+      EditVALDIZIMO.Text := DM.QueryEntradas.FieldByName('VALOR').AsString;
+  end;
+end;
+
+
+procedure TFrmEntradas.DBGridENTRADASDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+var
+  Value: string;
+begin
+  if (Column.FieldName = 'VALOR') and (DataCol = Column.Index) then
+  begin
+    Value := FormatFloat('R$ #,##0.00', StrToFloat(Column.Field.AsString));
+    DBGridENTRADAS.Canvas.TextRect(Rect, Rect.Left + 2, Rect.Top + 2, Value);
+  end;
+end;
+
+procedure TFrmEntradas.DBGridENTRADASDrawDataCell(Sender: TObject;
+  const Rect: TRect; Field: TField; State: TGridDrawState);
+var
+  Grid: TDBGrid;
+  S: string;
+  OriginalValue: string;
+  Value: Double;
+begin
+  if (Field.FieldName = 'VALOR') then
+  begin
+    Grid := TDBGrid(Sender);
+    OriginalValue := Field.AsString;
+
+    // Remova o símbolo de moeda "R$", o ponto de milhar "." e substitua a vírgula "," por ponto "."
+    S := StringReplace(OriginalValue, 'R$', '', [rfReplaceAll]);
+    S := StringReplace(S, '.', '', [rfReplaceAll]);
+    S := StringReplace(S, ',', '.', [rfReplaceAll]);
+
+    if TryStrToFloat(S, Value) then
+    begin
+      S := FormatFloat('R$ #,##0.00', Value); // Formate o valor como moeda
+    end
+    else
+    begin
+      // Se a conversão falhar, exiba o valor original
+      S := OriginalValue;
+    end;
+
+    // Centralize o texto na célula do DBGrid
+    Grid.Canvas.TextRect(Rect, Rect.Left + 2, Rect.Top + 2, S);
+  end;
+end;
+
+procedure TFrmEntradas.desabilitarCampos;
+begin
+  EditNOME        .Enabled := false;
+  EditVALDIZIMO   .Enabled := false;
+end;
+
+procedure TFrmEntradas.EditVALDIZIMOChange(Sender: TObject);
+var
+  s: string;
+  v: Double;
+begin
+  // Verifique se a formatação do valor deve ser aplicada
+  if not FFormattingValue then
+  begin
+    // Obter o texto do Edit e substituir ',' por '.' para permitir a conversão correta.
+    s := StringReplace(EditVALDIZIMO.Text, ',', '.', [rfReplaceAll]);
+
+    // Tentar converter o valor para um número double.
+    if TryStrToFloat(s, v) then
+    begin
+      // A conversão foi bem-sucedida, formatar o valor com duas casas decimais.
+      EditVALDIZIMO.Text := FormatFloat('0.00', v);
+    end
+    else
+    begin
+      // A conversão falhou, mostrar uma mensagem de erro.
+      ShowMessage('Valor de Dízimo inválido');
+    end;
+  end;
+
+  // Redefina a variável de controle
+  FFormattingValue := False;
+end;
+
+procedure TFrmEntradas.EditVALDIZIMOEnter(Sender: TObject);
+begin
+  FFormattingValue := True;
+end;
+
+procedure TFrmEntradas.EditVALDIZIMOKeyPress(Sender: TObject; var Key: Char);
+begin
+   if NOT (Key in ['0'..'9', #8, #9]) then
+   key := #0;
+   //Função posiciona o cursor sempre a direita como nos Caixas Eletronicos
+   EditVALDIZIMO.selstart := Length(EditVALDIZIMO.text);
+end;
+
+procedure TFrmEntradas.FormShow(Sender: TObject);
+begin
+  DM.TBL_ENTRADAS.Active := true; // Abre o dataset
+  buscarTudo;
+end;
+
+procedure TFrmEntradas.habilitarCampos;
+begin
+  EditNOME        .Enabled := true;
+  EditVALDIZIMO   .Enabled := true;
+end;
+
+procedure TFrmEntradas.limparCampos;
+begin
+  EditNOME        .Text  := '';
+  EditVALDIZIMO   .Text  := '';
+end;
+
+end.

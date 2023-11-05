@@ -1,22 +1,22 @@
 unit UGrupos;
-
 interface
-
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Buttons,
-  Vcl.Grids, Vcl.DBGrids;
-
+  Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.Mask, Vcl.DBCtrls;
 type
   TFrmGRUPOS = class(TForm)
-    Label1: TLabel;
-    EditCOD: TEdit;
-    EditGRUPOS: TEdit;
     GridGrupos: TDBGrid;
+    Panel1: TPanel;
     btnNovo: TBitBtn;
-    BtnSalvar: TBitBtn;
-    btnEditar: TBitBtn;
-    btnDeletar: TBitBtn;
+    BtnEditar: TBitBtn;
+    BtnDeletar: TBitBtn;
+    btnSalvar: TBitBtn;
+    BtnCancelar: TBitBtn;
+    Label1: TLabel;
+    editCod: TDBEdit;
+    Label2: TLabel;
+    EditGRUPOS: TDBEdit;
     procedure btnNovoClick(Sender: TObject);
     procedure BtnSalvarClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
@@ -30,21 +30,15 @@ type
   public
     { Public declarations }
   end;
-
 var
   FrmGRUPOS: TFrmGRUPOS;
-
 implementation
-
 {$R *.dfm}
-
-uses UDM, UCadMembro, ULogin, UPrincipal, UProfissoes;
-
+uses UDM, UCadMembroS, ULogin, UPrincipal, UProfissoes;
 procedure TFrmGRUPOS.associarcampos;
 begin
  DM.TBL_GRUPOS.FieldByName('NOME_GRUPO').Value :=EditGRUPOS.Text;
 end;
-
 procedure TFrmGRUPOS.btnDeletarClick(Sender: TObject);
 begin
 if Messagedlg('Deseja excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
@@ -53,7 +47,6 @@ if Messagedlg('Deseja excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = 
     DM.QueryGupos.Close;
     DM.QueryGupos.SQL.Clear;
     DM.QueryGupos.SQL.Add('delete from TBL_GRUPOS where ID = :ID');
-
     DM.QueryGupos.ParamByName('ID').Value := editCod.Text;
     DM.QueryGupos.ExecSql;
     buscarTudo;
@@ -62,7 +55,6 @@ if Messagedlg('Deseja excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = 
     //reativa a table
     DM.TBL_GRUPOS.Active := false;
     DM.TBL_GRUPOS.Active := true;
-
     EditGRUPOS.Enabled := false;
     btnSalvar.Enabled := false;
     btnEditar.Enabled := false;
@@ -70,26 +62,22 @@ if Messagedlg('Deseja excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = 
     btnNovo.Enabled := true;
   end;
 end;
-
 procedure TFrmGRUPOS.btnEditarClick(Sender: TObject);
 begin
 if (EditGRUPOS.Text <> '') then
     begin
     associarCampos;
     dm.TBL_GRUPOS.Edit;
-
     DM.QueryGupos.Close;
     DM.QueryGupos.SQL.Clear;
     DM.QueryGupos.SQL.Add('update TBL_GRUPOS set NOME_GRUPO = :NOME_GRUPO where ID = :ID');
     DM.QueryGupos.ParamByName('NOME_GRUPO').Value := EditGRUPOS.Text;
     DM.QueryGupos.ParamByName('ID').Value := editCod.Text;
     DM.QueryGupos.ExecSql;
-
     // destativa a table (solução para atualiza grid em tempo de execução)
     //reativa a table
     DM.TBL_GRUPOS.Active := false;
     DM.TBL_GRUPOS.Active := true;
-
     MessageDlg('Editado com Sucesso!!', mtInformation, mbOKCancel, 0);
     buscarTudo;
     EditGRUPOS.Enabled := false;
@@ -103,49 +91,62 @@ if (EditGRUPOS.Text <> '') then
     MessageDlg('Preencha os Campos', mtInformation, mbOKCancel, 0);
     end;
 end;
-
 procedure TFrmGRUPOS.btnNovoClick(Sender: TObject);
+   var prox:Integer;
 begin
-//apos editar um dado esta desbilitando o EditPROFISSAO
-EditGRUPOS.Enabled := true; // Reabilita EditPROFISSAO
-EditGRUPOS.Text := '';
-EditGRUPOS.SetFocus;
-EditGRUPOS.Enabled := true;
-DM.TBL_GRUPOS.Insert;
-BtnSalvar.Enabled := true;
-btnNovo.Enabled := true;
+    DM.QueryGupos.Open;     //Abre
+    DM.QueryGupos.Last;     //Move para o Ultimo
+    prox:=DM.QueryGuposID.AsInteger + 1;   //  Recebe o ultimo ID e Add +1
+    DM.QueryGupos.Append; //  Insere uma linha nova no final da tabela.
+    DM.QueryGuposID.AsInteger:=prox;  //Faz o AutoIncremento na tabela
+    EditGRUPOS.SetFocus;   // Coloca o Foco ( Cursor ) no Edit Usuario
 
-btnEditar.Enabled := true;
-btnDeletar.Enabled := false;
+    btnNovo.Enabled := true;
+    BtnSalvar.Enabled := true;
+    btnEditar.Enabled := False;
+    btnDeletar.Enabled := false;
+    btnCANCELAR.Enabled := true;
 end;
 
 procedure TFrmGRUPOS.BtnSalvarClick(Sender: TObject);
 begin
-if (EditGRUPOS.Text <> '')  then
-  begin
-  associarCampos;
-  DM.TBL_GRUPOS.Post;
-  buscarTudo;
-  MessageDlg('Salvo com Sucesso!!', mtInformation, mbOKCancel, 0);
-  EditGRUPOS.Enabled := false;
-  // destativa/Reativa table (solução para atualiza grid em tempo de execução)
-  DM.TBL_GRUPOS.Active := false;   // destativa a table
-  DM.TBL_GRUPOS.Active := true;    //reativa a table
+    DM.QueryGupos.Post;  // colca a QUERY em modo Post
+    Messagedlg('Registro salvo com sucesso!',
+    mtInformation, [mbOK],0);
+    //LimparCampos;
 
+    btnNovo.Enabled := true;
+    BtnSalvar.Enabled := true;
+    btnEditar.Enabled := False;
+    btnDeletar.Enabled := false;
+    btnCANCELAR.Enabled := true;
 
-  btnSalvar.Enabled := false;
-  btnNovo.Enabled := true;
-  btnEditar.Enabled := false;
-  btnDeletar.Enabled := false;
-  DM.QueryGupos.Close;
-  DM.QueryGupos.Open;
-  end
-  else
-  begin
-  MessageDlg('Preencha os Campos', mtInformation, mbOKCancel, 0);
-  end;
 end;
-
+//begin
+//if (EditGRUPOS.Text <> '')  then
+//  begin
+//  associarCampos;
+//  DM.TBL_GRUPOS.Post;
+//  buscarTudo;
+//  MessageDlg('Salvo com Sucesso!!', mtInformation, mbOKCancel, 0);
+//  EditGRUPOS.Enabled := false;
+//  // destativa/Reativa table (solução para atualiza grid em tempo de execução)
+//  DM.TBL_GRUPOS.Active := false;   // destativa a table
+//  DM.TBL_GRUPOS.Active := true;    //reativa a table
+//
+//
+//  btnSalvar.Enabled := false;
+//  btnNovo.Enabled := true;
+//  btnEditar.Enabled := false;
+//  btnDeletar.Enabled := false;
+//  DM.QueryGupos.Close;
+//  DM.QueryGupos.Open;
+//  end
+//  else
+//  begin
+//  MessageDlg('Preencha os Campos', mtInformation, mbOKCancel, 0);
+//  end;
+//end;
 procedure TFrmGRUPOS.buscartudo;
 begin
 DM.QueryGupos.Close;
@@ -153,7 +154,6 @@ DM.QueryGupos.SQL.Clear;
 DM.QueryGupos.SQL.Add('select * from TBL_GRUPOS');
 DM.QueryGupos.Open();
 end;
-
 procedure TFrmGRUPOS.FormShow(Sender: TObject);
 begin
 DM.TBL_GRUPOS.Active := false;
@@ -163,21 +163,17 @@ btnSalvar.Enabled := false;
 btnEditar.Enabled := false;
 btnDeletar.Enabled := false;
 end;
-
 procedure TFrmGRUPOS.GridGruposCellClick(Column: TColumn);
 begin
 DM.TBL_GRUPOS.Edit;
 btnEditar.Enabled := true;
 btnDeletar.Enabled := true;
 EditGRUPOS.Enabled := true;
-
 if
 DM.TBL_GRUPOS.FieldByName('NOME_GRUPO').Value <> null then
 //Carrega o dado do DBGrid no EDIT
 EditGRUPOS.Text := DM.QueryGupos.FieldByName('NOME_GRUPO').Value;
 editCod.Text := DM.TBL_GRUPOS.FieldByName('ID').Value;
 
-
 end;
-
 end.

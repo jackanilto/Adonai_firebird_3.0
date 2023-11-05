@@ -3,7 +3,7 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
   Top = 0
   BorderIcons = [biSystemMenu]
   Caption = 'D'#237'zimo e Ofertas'
-  ClientHeight = 319
+  ClientHeight = 592
   ClientWidth = 764
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -14,24 +14,9 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
   Position = poScreenCenter
   OnShow = FormShow
   TextHeight = 13
-  object Label1: TLabel
-    Left = 24
-    Top = 8
-    Width = 11
-    Height = 13
-    Caption = 'ID'
-    Visible = False
-  end
-  object Label2: TLabel
-    Left = 32
-    Top = 41
-    Width = 25
-    Height = 13
-    Caption = 'ROLL'
-  end
   object Label3: TLabel
-    Left = 141
-    Top = 41
+    Left = 32
+    Top = 8
     Width = 29
     Height = 13
     Caption = 'NOME'
@@ -65,8 +50,8 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
     Caption = 'OBSERVA'#199#195'O'
   end
   object btnBUSCAR: TSpeedButton
-    Left = 423
-    Top = 31
+    Left = 279
+    Top = 19
     Width = 42
     Height = 36
     Glyph.Data = {
@@ -191,9 +176,16 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
     Height = 13
     Caption = 'TIPO'
   end
+  object Label1: TLabel
+    Left = 344
+    Top = 8
+    Width = 44
+    Height = 13
+    Caption = 'ID Dizimo'
+  end
   object btnNovo: TBitBtn
-    Left = 225
-    Top = 253
+    Left = 236
+    Top = 517
     Width = 56
     Height = 56
     Glyph.Data = {
@@ -632,12 +624,12 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
       DEEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
     NumGlyphs = 2
-    TabOrder = 3
+    TabOrder = 1
     OnClick = btnNovoClick
   end
   object BtnSalvar: TBitBtn
-    Left = 301
-    Top = 253
+    Left = 312
+    Top = 517
     Width = 56
     Height = 56
     Glyph.Data = {
@@ -1076,12 +1068,12 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
       FCFCFCFCEEEEEEAFAFAFAFAFAFB3B3B3CFCFCFF2F2F2FFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
     NumGlyphs = 2
-    TabOrder = 4
+    TabOrder = 2
     OnClick = BtnSalvarClick
   end
   object btnEditar: TBitBtn
-    Left = 372
-    Top = 253
+    Left = 374
+    Top = 517
     Width = 56
     Height = 56
     Glyph.Data = {
@@ -1520,12 +1512,12 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
       F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8F8FBFBFBFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
     NumGlyphs = 2
-    TabOrder = 5
+    TabOrder = 3
     OnClick = btnEditarClick
   end
   object btnDeletar: TBitBtn
-    Left = 449
-    Top = 253
+    Left = 460
+    Top = 517
     Width = 56
     Height = 56
     Glyph.Data = {
@@ -1964,22 +1956,23 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
       5F848484C8C8C8FAFAFAFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
     NumGlyphs = 2
-    TabOrder = 6
+    TabOrder = 4
     OnClick = btnDeletarClick
   end
   object DBGridDIZIMOS: TDBGrid
     Left = 8
     Top = 127
     Width = 748
-    Height = 120
+    Height = 194
     DataSource = DM.DSDIZIMOS
-    TabOrder = 7
+    TabOrder = 5
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
     OnCellClick = DBGridDIZIMOSCellClick
+    OnDrawColumnCell = DBGridDIZIMOSDrawColumnCell
     Columns = <
       item
         Expanded = False
@@ -2002,7 +1995,7 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
       item
         Expanded = False
         FieldName = 'NOME'
-        Width = 215
+        Width = 180
         Visible = True
       end
       item
@@ -2019,11 +2012,6 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
       end
       item
         Expanded = False
-        FieldName = 'OBS'
-        Visible = False
-      end
-      item
-        Expanded = False
         FieldName = 'TIPO'
         Width = 80
         Visible = True
@@ -2031,30 +2019,21 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
       item
         Expanded = False
         FieldName = 'VALOR'
-        Width = 80
+        Width = 90
         Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'OBS'
+        Visible = False
       end>
   end
-  object EditID: TEdit
-    Left = 41
-    Top = 5
-    Width = 121
-    Height = 21
-    TabOrder = 0
-  end
-  object EditROLL: TEdit
-    Left = 63
-    Top = 38
-    Width = 70
-    Height = 21
-    TabOrder = 1
-  end
   object EditNOME: TEdit
-    Left = 176
-    Top = 38
+    Left = 32
+    Top = 26
     Width = 241
     Height = 21
-    TabOrder = 2
+    TabOrder = 0
   end
   object EditVALDIZIMO: TEdit
     Left = 32
@@ -2063,16 +2042,15 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
     Height = 21
     BiDiMode = bdRightToLeft
     ParentBiDiMode = False
-    TabOrder = 8
+    TabOrder = 6
     OnChange = EditVALDIZIMOChange
-    OnKeyPress = EditVALDIZIMOKeyPress
   end
   object CBFormas: TComboBox
     Left = 256
     Top = 89
     Width = 89
     Height = 21
-    TabOrder = 9
+    TabOrder = 7
     Items.Strings = (
       'Dinheiro'
       'Cheque'
@@ -2084,26 +2062,18 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
     Top = 48
     Width = 268
     Height = 62
-    TabOrder = 10
+    TabOrder = 8
   end
   object cbTipo: TComboBox
     Left = 351
     Top = 89
     Width = 114
     Height = 21
-    TabOrder = 12
+    TabOrder = 9
     Items.Strings = (
       'Oferta'
       'D'#237'zimo'
       'Outros')
-  end
-  object EditID_DIZIMO: TEdit
-    Left = 208
-    Top = 5
-    Width = 121
-    Height = 21
-    TabOrder = 11
-    Text = 'EditID_DIZIMO'
   end
   object DateDIZIMO: TDateTimePicker
     Left = 139
@@ -2112,6 +2082,13 @@ object FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA
     Height = 21
     Date = 45038.000000000000000000
     Time = 0.756353807868436000
-    TabOrder = 13
+    TabOrder = 10
+  end
+  object EditID_DIZIMO: TEdit
+    Left = 344
+    Top = 27
+    Width = 121
+    Height = 21
+    TabOrder = 11
   end
 end
