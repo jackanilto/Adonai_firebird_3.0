@@ -1,0 +1,31 @@
+object FrmEmitirCarteiras: TFrmEmitirCarteiras
+  Left = 0
+  Top = 0
+  Caption = 'Emiss'#227'o de Credenciais'
+  ClientHeight = 441
+  ClientWidth = 624
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  Position = poMainFormCenter
+  TextHeight = 15
+  object CartMembro1: TSpeedButton
+    Left = 8
+    Top = 8
+    Width = 145
+    Height = 41
+    Caption = 'Modelo 1'
+    OnClick = CartMembro1Click
+  end
+  object CartMembro2: TSpeedButton
+    Left = 8
+    Top = 55
+    Width = 145
+    Height = 41
+    Caption = 'Modelo 2'
+    OnClick = CartMembro2Click
+  end
+end

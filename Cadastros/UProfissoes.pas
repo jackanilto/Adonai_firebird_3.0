@@ -1,186 +1,214 @@
 unit UProfissoes;
-
 interface
-
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
-  Vcl.StdCtrls, Vcl.Buttons;
-
+  Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, Vcl.Mask, Vcl.DBCtrls;
 type
   TFrmCadProfissoes = class(TForm)
-    GridProf: TDBGrid;
-    EditPROFISSAO: TEdit;
-    Label1: TLabel;
-    EditCOD: TEdit;
-    BtnSalvar: TBitBtn;
+    DBGrid1: TDBGrid;
+    Panel1: TPanel;
     btnNovo: TBitBtn;
-    btnEditar: TBitBtn;
-    btnDeletar: TBitBtn;
-    procedure btnDeletarClick(Sender: TObject);
-    procedure btnEditarClick(Sender: TObject);
+    BtnEditar: TBitBtn;
+    BtnDeletar: TBitBtn;
+    btnSalvar: TBitBtn;
+    BtnCancelar: TBitBtn;
+    Label2: TLabel;
+    DBEditPROF: TDBEdit;
+    Label1: TLabel;
+    DBEditCOD: TDBEdit;
+    procedure BtnCancelarClick(Sender: TObject);
     procedure btnNovoClick(Sender: TObject);
-    procedure BtnSalvarClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
+    procedure BtnEditarClick(Sender: TObject);
+    procedure BtnDeletarClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure GridProfCellClick(Column: TColumn);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure DBGrid1CellClick(Column: TColumn);
  //   function ProximoID(GENERATOR: string): integer;
   private
     { Private declarations }
-    procedure buscarTudo();
-    procedure associarCampos();
   public
     { Public declarations }
+    PROCEDURE LIMPARCAMPOS;
+    PROCEDURE BUSCARTUDO;
   end;
-
 var
   FrmCadProfissoes: TFrmCadProfissoes;
   //nomeAntigo: string;
-
 implementation
-
 {$R *.dfm}
-
-uses UDM, UCadMembroS, ULogin, UPrincipal;
+uses UDM, UCadMembroS, ULogin, UPrincipal, UcadastrosGerais;
+{ TFrmCadProfissoes }
 
 { TFrmCadProfissoes }
 
-
-{ TFrmCadProfissoes }
-
-procedure TFrmCadProfissoes.associarCampos;
+procedure TFrmCadProfissoes.BtnCancelarClick(Sender: TObject);
 begin
- DM.TBL_PROFISSOES.FieldByName('PROFISSAO').Value :=EditPROFISSAO.Text;
+    DM.QueryProfissoes.Cancel;
+   Messagedlg('A Ação foi cancelada',
+   mtInformation, [mbOK],0);
+
+   DM.QueryProfissoes.Close;
+   DM.QueryProfissoes.Open;
+
+   BUSCARTUDO;
+   limparCampos;
+   BtnSalvar.Enabled     := False;
+   btnNovo.Enabled       := True;
+   btnDeletar.Enabled    := False;
+   btnEditar.Enabled     := True;
+   btnCANCELAR.Enabled   := False;
 end;
 
-procedure TFrmCadProfissoes.btnDeletarClick(Sender: TObject);
+procedure TFrmCadProfissoes.BtnDeletarClick(Sender: TObject);
 begin
-if Messagedlg('Deseja excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    BtnSalvar.Enabled := False;
+    btnNovo.Enabled := False;
+    btnDeletar.Enabled := False;
+    btnEditar.Enabled := False;
+    btnCANCELAR.Enabled := True;
+  if MessageDlg('Deseja deletar este registro?', MtConfirmation, [mbOK, MbNo],0)=mrOk then
   begin
-   associarCampos;
-    DM.QueryProfissoes.Close;
-    DM.QueryProfissoes.SQL.Clear;
-    DM.QueryProfissoes.SQL.Add('delete from TBL_PROFISSOES where ID = :ID');
+    DM.QueryProfissoes.Delete;  // colca a QUERY em modo edit
 
-    DM.QueryProfissoes.ParamByName('ID').Value := editCod.Text;
-    DM.QueryProfissoes.ExecSql;
-    buscarTudo;
-    MessageDlg('Excluido com Sucesso!!', mtInformation, mbOKCancel, 0);
-    // destativa a table (solução para atualiza grid em tempo de execução)
-    //reativa a table
-    DM.TBL_PROFISSOES.Active := false;
-    DM.TBL_PROFISSOES.Active := true;
+   // buscarTudo;
+    limparCampos;
 
-    EditPROFISSAO.Enabled := false;
-    btnSalvar.Enabled := false;
-    btnEditar.Enabled := false;
-    btnDeletar.Enabled := false;
-    btnNovo.Enabled := true;
-  end;
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+  end
+  else
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+
+
+   // buscarTudo;
+    limparCampos;
+    // caso o usuario clicar em NÂO
+  abort;
+
+   // buscarTudo;
+    limparCampos;
+
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+
 end;
 
-procedure TFrmCadProfissoes.btnEditarClick(Sender: TObject);
+procedure TFrmCadProfissoes.BtnEditarClick(Sender: TObject);
 begin
-if (EditPROFISSAO.Text <> '') then
-    begin
-    associarCampos;
-    dm.TBL_PROFISSOES.Edit;
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := False;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := False;
+    btnCANCELAR.Enabled   := True;
 
-    DM.QueryProfissoes.Close;
-    DM.QueryProfissoes.SQL.Clear;
-    DM.QueryProfissoes.SQL.Add('update TBL_PROFISSOES set PROFISSAO = :PROFISSAO where ID = :ID');
-    DM.QueryProfissoes.ParamByName('PROFISSAO').Value := EditPROFISSAO.Text;
-    DM.QueryProfissoes.ParamByName('ID').Value := editCod.Text;
-    DM.QueryProfissoes.ExecSql;
+if MessageDlg('Deseja alterar este registro?', MtConfirmation, [mbOK, MbNo],0)=mrOk then
+  begin
+    DM.QueryProfissoes.Edit;  // colca a QUERY em modo edit
+  end
+  else
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := False;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := False;
+    btnCANCELAR.Enabled   := True;
+    // caso o usuario clicar em NÂO
+  abort;
 
-    // destativa a table (solução para atualiza grid em tempo de execução)
-    //reativa a table
-    DM.TBL_PROFISSOES.Active := false;
-    DM.TBL_PROFISSOES.Active := true;
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := True;
 
-    MessageDlg('Editado com Sucesso!!', mtInformation, mbOKCancel, 0);
-    buscarTudo;
-    EditPROFISSAO.Enabled := false;
-    btnSalvar.Enabled := false;
-    btnEditar.Enabled := false;
-    btnDeletar.Enabled := false;
-    btnNovo.Enabled := true;
-    end
-    else
-    begin
-    MessageDlg('Preencha os Campos', mtInformation, mbOKCancel, 0);
-    end;
 end;
 
 procedure TFrmCadProfissoes.btnNovoClick(Sender: TObject);
+   var prox:Integer;
 begin
-//apos editar um dado esta desbilitando o EditPROFISSAO
-EditPROFISSAO.Enabled := true; // Reabilita EditPROFISSAO
-EditPROFISSAO.Text := '';
-EditPROFISSAO.SetFocus;
-EditPROFISSAO.Enabled := true;
-DM.TBL_PROFISSOES.Insert;
-BtnSalvar.Enabled := true;
-btnNovo.Enabled := true;
+    DM.QueryProfissoes.Open;     //Abre
+    DM.QueryProfissoes.Last;     //Move para o Ultimo
+    prox:=DM.QueryProfissoesID.AsInteger + 1;   //  Recebe o ultimo ID e Add +1
+    DM.QueryProfissoes.Append; //  Insere uma linha nova no final da tabela.
+    DM.QueryProfissoesID.AsInteger:=prox;  //Faz o AutoIncremento na tabela
+    DBEditPROF.SetFocus;   // Coloca o Foco ( Cursor ) no Edit Usuario
 
-btnEditar.Enabled := true;
-btnDeletar.Enabled := false;
+
+    //limparCampos();
+     DBEditPROF.Text := '';
+     DBEditCOD.enabled := False;
+
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := False;
+    btnDeletar.Enabled    := false;
+    btnEditar.Enabled     := False;
+    btnCANCELAR.Enabled   := True;
+
 end;
 
-procedure TFrmCadProfissoes.BtnSalvarClick(Sender: TObject);
+procedure TFrmCadProfissoes.btnSalvarClick(Sender: TObject);
 begin
-if (EditPROFISSAO.Text <> '')  then
-  begin
-  associarCampos;
-  DM.TBL_PROFISSOES.Post;
-  buscarTudo;
-  MessageDlg('Salvo com Sucesso!!', mtInformation, mbOKCancel, 0);
-  EditPROFISSAO.Enabled := false;
-  // destativa/Reativa table (solução para atualiza grid em tempo de execução)
-  DM.TBL_PROFISSOES.Active := false;   // destativa a table
-  DM.TBL_PROFISSOES.Active := true;    //reativa a table
+    DM.QueryProfissoes.Edit;
+    DM.QueryProfissoes.Post;  // colca a QUERY em modo Post
+    Messagedlg('Registro salvo com sucesso!',
+    mtInformation, [mbOK],0);
+    LimparCampos;
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
 
-
-  btnSalvar.Enabled := false;
-  btnNovo.Enabled := true;
-  btnEditar.Enabled := false;
-  btnDeletar.Enabled := false;
-  DM.QueryProfissoes.Close;
-  DM.QueryProfissoes.Open;
-  end
-  else
-  begin
-  MessageDlg('Preencha os Campos', mtInformation, mbOKCancel, 0);
-  end;
 end;
 
-procedure TFrmCadProfissoes.buscarTudo;
+procedure TFrmCadProfissoes.BUSCARTUDO;
 begin
-DM.QueryProfissoes.Close;
-DM.QueryProfissoes.SQL.Clear;
-DM.QueryProfissoes.SQL.Add('select * from TBL_PROFISSOES');
-DM.QueryProfissoes.Open();
+    DM.QueryProfissoes.Close;
+    DM.QueryProfissoes.SQL.Clear;
+    DM.QueryProfissoes.SQL.Add('select * from TBL_PROFISSOES order by ID asc');
+    DM.QueryProfissoes.Open();
+end;
+
+procedure TFrmCadProfissoes.DBGrid1CellClick(Column: TColumn);
+begin
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := True;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := True;
 end;
 
 procedure TFrmCadProfissoes.FormShow(Sender: TObject);
 begin
-DM.TBL_PROFISSOES.Active := false;
-DM.TBL_PROFISSOES.Active := true;
-buscarTudo;
-btnSalvar.Enabled := false;
-btnEditar.Enabled := false;
-btnDeletar.Enabled := false;
+  BUSCARTUDO;
 end;
 
-procedure TFrmCadProfissoes.GridProfCellClick(Column: TColumn);
+procedure TFrmCadProfissoes.LIMPARCAMPOS;
 begin
-DM.TBL_PROFISSOES.Edit;
-btnEditar.Enabled := true;
-btnDeletar.Enabled := true;
-EditPROFISSAO.Enabled := true;
-
-if DM.TBL_PROFISSOES.FieldByName('PROFISSAO').Value <> null then
-EditPROFISSAO.Text := DM.TBL_PROFISSOES.FieldByName('PROFISSAO').Value;
-edItCod.Text := DM.TBL_PROFISSOES.FieldByName('ID').Value;
-
+  DBEditCOD.enabled := False;;
+  DBEditPROF.Text := '';
 end;
+
+procedure TFrmCadProfissoes.SpeedButton1Click(Sender: TObject);
+begin
+  if MessageDlg('Deseja SAIR e Cancelar o cadastro?', mtInformation, [mbOK], 0) = mrOk then
+  begin
+    if DM.QueryProfissoes.State in [dsInsert, dsEdit] then
+      DM.QueryProfissoes.Cancel; // Cancela a inserção ou edição
+    DM.QueryProfissoes.Close; // Fecha a query
+    Close; // Fecha o formulário
+  end;
+end;
+
 end.

@@ -3,7 +3,9 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids, UDM,
-  Vcl.StdCtrls, Vcl.Buttons, Jpeg;
+  Vcl.StdCtrls, Vcl.Buttons, Jpeg,
+  // suas units necessárias
+  frxClass, frxDBSet; // Adicione estas unidades conforme necessário;
 type
   TFrmCarteirinha = class(TForm)
     gridListMembros: TDBGrid;
@@ -16,7 +18,6 @@ type
     btnLimpaListaCarteiras: TSpeedButton;
     procedure edtBuscarChange(Sender: TObject);
     procedure gridListMembrosDblClick(Sender: TObject);
-    procedure btnCarteirinhaClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -33,28 +34,9 @@ var
   FrmCarteirinha: TFrmCarteirinha;
 implementation
 {$R *.dfm}
-procedure TFrmCarteirinha.btnCarteirinhaClick(Sender: TObject);
-begin
-//     selecione o objeto frxPictureView que você adicionou e na aba Events dê dois cliques
-//     em OnAfterData e digite o seguinte código:
-//     picture1.Picture.LoadFromFile(<frxDataSet."CAMINHO">);
-//
-//    onde
-//
-//    picture1 é o nome do objeto de imagem;
-//    Picture é a propriedade que armazena a imagem;
-//    LoadFromFile é o método que Carrega uma imagem
-//    frxDataSet é o nome do dataset que você carregou dentro do seu relatório (que geralmente aparece
-//    ao lado direto da Engine do fastreport.
-//    Caminho é o nome do Field do dataset (ou campo da tabela) que contem o caminho do arquivo em string;
 
 
-  DM.CDSCarteira.Open;
-  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelCarteira1deMaio.fr3');
-  DM.RelCarteira.ShowReport();
-  btnCarteirinha.Enabled := true;
-  buscarTudo; // Após chamar o relatorio, executa a procedure BuscarTudo
-end;
+
 procedure TFrmCarteirinha.buscarNome;
 begin
   dm.QueryMembro.Close;
@@ -89,6 +71,7 @@ procedure TFrmCarteirinha.FormCreate(Sender: TObject);
 begin
   DM.CDSCarteira.Active := false;
   DM.CDSCarteira.Active := true;
+
 end;
 
 procedure TFrmCarteirinha.gridListMembrosDblClick(Sender: TObject);

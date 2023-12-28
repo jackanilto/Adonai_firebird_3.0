@@ -181,13 +181,11 @@ object FrmEntraDizOfertas: TFrmEntraDizOfertas
       item
         Expanded = False
         FieldName = 'ID_DIZIMO'
-        Width = -1
         Visible = False
       end
       item
         Expanded = False
         FieldName = 'ID'
-        Width = -1
         Visible = False
       end
       item
@@ -223,7 +221,6 @@ object FrmEntraDizOfertas: TFrmEntraDizOfertas
       item
         Expanded = False
         FieldName = 'OBS'
-        Width = -1
         Visible = False
       end
       item
@@ -231,13 +228,5 @@ object FrmEntraDizOfertas: TFrmEntraDizOfertas
         FieldName = 'DATA'
         Visible = True
       end>
-  end
-  object DBNavigator1: TDBNavigator
-    Left = 16
-    Top = 327
-    Width = 520
-    Height = 66
-    DataSource = DM.DSDIZIMOS
-    TabOrder = 10
   end
 end

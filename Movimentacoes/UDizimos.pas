@@ -3,210 +3,216 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UDM, Data.DB, Vcl.Mask, Vcl.StdCtrls,
-  Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.ComCtrls;
+  Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.ComCtrls, Vcl.DBCtrls, JvExMask,
+  JvToolEdit, JvDBControls, Vcl.ExtCtrls, DateUtils, JvMaskEdit;
 type
-  TFrmDIZIMOOFERTA = class(TForm)
+  TTFrmDIZIMOOFERTA = class(TForm)
+    btnBUSCAR: TSpeedButton;
+    PanelTop: TPanel;
     btnNovo: TBitBtn;
-    BtnSalvar: TBitBtn;
     btnEditar: TBitBtn;
     btnDeletar: TBitBtn;
-    DBGridDIZIMOS: TDBGrid;
+    BtnSalvar: TBitBtn;
+    btnCANCELAR: TBitBtn;
+    BtnAtualizar: TBitBtn;
+    Label2: TLabel;
+    DBEditROLL: TDBEdit;
     Label3: TLabel;
-    EditNOME: TEdit;
+    DBEditNOME: TDBEdit;
     Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
-    LabelOBS: TLabel;
-    EditVALDIZIMO: TEdit;
-    CBFormas: TComboBox;
-    MemoOBSERVACAO: TMemo;
-    btnBUSCAR: TSpeedButton;
+    Label7: TLabel;
     Label8: TLabel;
-    cbTipo: TComboBox;
-//    EditID_DIZIMO: TEdit;
-    DateDIZIMO: TDateTimePicker;
-    EditID_DIZIMO: TEdit;
+    DBEditCodMovimento: TDBEdit;
+    Label9: TLabel;
+    DBMemoOBSERVACAO: TDBMemo;
+    DBGrid1: TDBGrid;
+    DBEditDATA: TJvDBDateEdit;
+    DBcbTipo: TDBComboBox;
     Label1: TLabel;
+    DBEditCodDizimo: TDBEdit;
+    GroupBox1: TGroupBox;
+    LabelTotal: TLabel;
+    DatePickerFiltro: TDateTimePicker;
+    BtnFiltroDizimo: TSpeedButton;
+    DBEditVALOR: TDBEdit;
+    DBCBFORMA: TDBComboBox;
     procedure btnBUSCARClick(Sender: TObject);
     procedure btnNovoClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BtnSalvarClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
     procedure btnDeletarClick(Sender: TObject);
-//    procedure EditBUSCARROLLChange(Sender: TObject);
-//    procedure EditBUSCARChange(Sender: TObject);
     procedure DBGridBUSCARCellClick(Column: TColumn);
-    procedure DBGridDIZIMOSCellClick(Column: TColumn);
-    procedure DBGridDIZIMOSDrawColumnCell(Sender: TObject; const Rect: TRect;
-      DataCol: Integer; Column: TColumn; State: TGridDrawState);
-    procedure EditVALDIZIMOChange(Sender: TObject);
+    procedure btnCANCELARClick(Sender: TObject);
+    procedure BtnAtualizarClick(Sender: TObject);
+    procedure DBGrid1CellClick(Column: TColumn);
+    procedure BtnFiltroDizimoClick(Sender: TObject);
   private
     { Private declarations }
     FFormattingValue: Boolean;
-    procedure limparCampos;
-    procedure habilitarCampos;
-    procedure desabilitarCampos;
-    procedure buscarTudo;
-    procedure associarCampos;
+    PROCEDURE LIMPARCAMPOS;
+    PROCEDURE EXIBITOTALDIA;
+//    procedure buscarTudo;
   public
     { Public declarations }
-//   procedure buscarNome();
-//   procedure buscarRoll();
   end;
 var
-  FrmDIZIMOOFERTA: TFrmDIZIMOOFERTA;
-  TempValue: string;
-    // VAR PARA PROCEDURE FORMATA MOEDAS
-   s : string;
-   v : double;
-   I : integer;
+  TFrmDIZIMOOFERTA: TTFrmDIZIMOOFERTA;
+
 
 implementation
 {$R *.dfm}
-uses UBuscarMembro, Vcl.Menus;
+uses UBuscarMembro, Vcl.Menus, UCadMembroS;
 { TFrmDIZIMOOFERTA }
 
-procedure TFrmDIZIMOOFERTA.associarCampos;
-var
-  v: Double;
+
+
+procedure TTFrmDIZIMOOFERTA.btnCANCELARClick(Sender: TObject);
 begin
-  DM.TBL_DIZIMOS.FieldByName('ID_DIZIMO')  .AsString   := EditID_DIZIMO.Text;
-  DM.TBL_DIZIMOS.FieldByName('NOME')       .AsString := EditNOME.Text;
-  DM.TBL_DIZIMOS.FieldByName('DATA')       .AsDateTime := DateDIZIMO.Date;
-  DM.TBL_DIZIMOS.FieldByName('FORMA')      .AsString := CBFormas.Text;
-  DM.TBL_DIZIMOS.FieldByName('TIPO')       .AsString := cbTipo.Text;
 
-  // Converta o valor corretamente
-  if TryStrToFloat(StringReplace(EditVALDIZIMO.Text, 'R$', '', [rfReplaceAll]), v) then
-    DM.TBL_DIZIMOS.FieldByName('VALOR').AsFloat := v;
+   DM.QueryDIZIMOS.Cancel;
+   Messagedlg('Ação cancelada',
+   mtInformation, [mbOK],0);
 
-  DM.TBL_DIZIMOS.FieldByName('OBS').AsString := MemoOBSERVACAO.Text;
+   DM.QueryDIZIMOS.Close;
+   DM.QueryDIZIMOS.Open;
+
+   LIMPARCAMPOS;
+   BtnSalvar.Enabled     := False;
+   btnNovo.Enabled       := True;
+   btnDeletar.Enabled    := False;
+   btnEditar.Enabled     := True;
+   btnCANCELAR.Enabled   := False;
+   btnBUSCAR.Enabled  := True;
 end;
 
-procedure TFrmDIZIMOOFERTA.btnDeletarClick(Sender: TObject);
+procedure TTFrmDIZIMOOFERTA.btnDeletarClick(Sender: TObject);
 begin
-  if Messagedlg('Deseja excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    BtnSalvar.Enabled := False;
+    btnNovo.Enabled := False;
+    btnDeletar.Enabled := False;
+    btnEditar.Enabled := False;
+    btnCANCELAR.Enabled := True;
+    btnBUSCAR.Enabled := False;
+  if MessageDlg('Deseja deletar este registro?', MtConfirmation, [mbOK, MbNo],0)=mrOk then
   begin
-    associarCampos;
-    DM.QueryDIZIMOS.Close;
-    DM.QueryDIZIMOS.SQL.Clear;
-    DM.QueryDIZIMOS.SQL.Add('delete from TBL_DIZIMOS where ID = :ID');
-    DM.QueryDIZIMOS.ExecSql;
-    buscarTudo;
-    MessageDlg('Excluido com Sucesso!!', mtInformation, mbOKCancel, 0);
-    // destativa a table (solução para atualiza grid em tempo de execução)
-    //reativa a table
-    DM.TBL_DIZIMOS.Active := false;
-    DM.TBL_DIZIMOS.Active := true;
-    btnBUSCAR.Enabled := false;
-    EditNOME.Enabled := false;
-    btnSalvar.Enabled := false;
-    btnEditar.Enabled := false;
-    btnDeletar.Enabled := false;
-    btnNovo.Enabled := true;
-  end;
-end;
-procedure TFrmDIZIMOOFERTA.btnEditarClick(Sender: TObject);
-begin
-  if (editNOME.Text <> '') then
-    begin
-        associarCampos;
-        DM.TBL_DIZIMOS.Edit;
-        DM.QueryDIZIMOS.Close;
-        DM.QueryDIZIMOS.SQL.Clear;
-        DM.QueryDIZIMOS.SQL.Add('update TBL_DIZIMOS set '+
-        ' ID_DIZIMO     =  :ID_DIZIMO     ,  NOME           = :NOME        , '+
-        ' DATA          =  :DATA          ,  FORMA          = :FORMA       , '+
-        ' OBS           =  :OBS           ,  TIPO           = :TIPO        , '+
-        ' VALOR         =  :VALOR         ,ROLL             = :ROLL          '+
-        ' where id      =  :id           ');
+    DM.QueryDIZIMOS.Delete;  // colca a QUERY em modo edit
 
-        DM.QueryDIZIMOS.ParamByName('ID_DIZIMO').AsString := EditID_DIZIMO.Text;
-        //DM.QueryDIZIMOS.ParamByName('ID').AsString := EditID.Text;
-        DM.QueryDIZIMOS.ParamByName('NOME').AsString := EditNome.Text;
-        DM.QueryDIZIMOS.ParamByName('DATA').AsDate := DateDIZIMO.Date;
-        DM.QueryDIZIMOS.ParamByName('FORMA').AsString := CBFormas.Text;
-        DM.QueryDIZIMOS.ParamByName('OBS').AsString := MemoOBSERVACAO.Text;
-        DM.QueryDIZIMOS.ParamByName('TIPO').AsString := cbTIPO.Text;
-        DM.QueryDIZIMOS.ParamByName('VALOR').AsCurrency := StrToCurr(EditVALDIZIMO.Text);
-        //DM.QueryDIZIMOS.ParamByName('VALOR').AsString := EditVALDIZIMO.Text;
-        //DM.QueryDIZIMOS.ParamByName('ROLL').AsString := EditROLL.Text;
+    LIMPARCAMPOS;
 
-        DM.QueryDIZIMOS.ExecSql;
-
-        MessageDlg('Editado com Sucesso!!', mtInformation, mbOKCancel, 0);
-        buscarTudo;
-//        desabilitarCampos;
-//        limparCampos;
-        btnBUSCAR.Enabled := false;
-        btnSalvar.Enabled := false;
-        btnEditar.Enabled := false;
-        btnDeletar.Enabled := false;
-        btnNovo.Enabled := true;
-        DBGridDIZIMOS.Enabled := true;
-    end
-    else
-    begin
-    MessageDlg('Preencha os Campos', mtInformation, mbOKCancel, 0);
-    end;
-end;
-procedure TFrmDIZIMOOFERTA.btnNovoClick(Sender: TObject);
-begin
-  //apos editar um dado esta desbilitando o Edit
-  DBGridDIZIMOS.Enabled:=false;
-  habilitarCampos();
-  limparCampos();
-  //EditNOME.Enabled := true; // Reabilita Edit
-  //EditNOME.Text := '';
-  //EditROLL.SetFocus;
-  DM.TBL_DIZIMOS.Insert;
-  btnBUSCAR.Enabled := true;
-  BtnSalvar.Enabled := true;
-  btnNovo.Enabled := true;
-  btnEditar.Enabled := true;
-  btnDeletar.Enabled := false;
-end;
-procedure TFrmDIZIMOOFERTA.BtnSalvarClick(Sender: TObject);
-var
-  v: Double;
-begin
-  if (EditNOME.Text <> '') then
-  begin
-    associarCampos;
-
-    // Converter o valor corretamente
-    if TryStrToFloat(StringReplace(EditVALDIZIMO.Text, 'R$', '', [rfReplaceAll]), v) then
-      DM.TBL_DIZIMOS.FieldByName('VALOR').AsFloat := v;
-
-    DM.TBL_DIZIMOS.Post;
-
-    MessageDlg('Salvo com Sucesso!!', mtInformation, mbOKCancel, 0);
-    desabilitarCampos;
-    BtnSalvar.Enabled := false;
-    btnNovo.Enabled := true;
-    btnEditar.Enabled := false;
-    btnDeletar.Enabled := false;
-    DBGridDIZIMOS.Enabled := true;
-    buscarTudo;
-
-    // Defina o foco em outro controle após a desativação do botão
-    EditNOME.SetFocus;
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+    btnBUSCAR.Enabled  := True;
   end
   else
-  begin
-    MessageDlg('Preencha os Campos', mtInformation, mbOKCancel, 0);
-  end;
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+    btnBUSCAR.Enabled  := True;
+    LIMPARCAMPOS;
+    // caso o usuario clicar em NÂO
+  abort;
+    LIMPARCAMPOS;
+
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+    btnBUSCAR.Enabled  := True;
+
 end;
 
-
-procedure TFrmDIZIMOOFERTA.buscarTudo;
+procedure TTFrmDIZIMOOFERTA.btnEditarClick(Sender: TObject);
 begin
-  DM.QueryMembro.Close;
-  DM.QueryMembro.SQL.Clear;
-  DM.QueryMembro.SQL.Add('select * from TBL_DIZIMOS');
-  DM.QueryMembro.Open();
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := False;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := False;
+    btnCANCELAR.Enabled   := True;
+    btnBUSCAR.Enabled  := False;
+
+if MessageDlg('Deseja alterar este registro?', MtConfirmation, [mbOK, MbNo],0)=mrOk then
+  begin
+    DM.QueryDIZIMOS.Edit;  // colca a QUERY em modo edit
+  end
+  else
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := False;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := False;
+    btnCANCELAR.Enabled   := True;
+    // caso o usuario clicar em NÂO
+  abort;
+
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := True;
+    btnBUSCAR.Enabled  := True;
+
 end;
-procedure TFrmDIZIMOOFERTA.DBGridBUSCARCellClick(Column: TColumn);
+
+procedure TTFrmDIZIMOOFERTA.btnNovoClick(Sender: TObject);
+   var prox:Integer;
+begin
+    DM.QueryDIZIMOS.Open;     //Abre
+    DM.QueryDIZIMOS.Last;     //Move para o Ultimo
+    prox:=DM.QueryDIZIMOSID.AsInteger + 1;   //  Recebe o ultimo ID e Add +1
+    DM.QueryDIZIMOS.Append; //  Insere uma linha nova no final da tabela.
+    DM.QueryDIZIMOSID.AsInteger:=prox;  //Faz o AutoIncremento na tabela
+    DBEditNOME.SetFocus;   // Coloca o Foco ( Cursor ) no Edit Usuario
+    DBEditDATA.Date := Date; //Carrega data atual no componente
+
+    LIMPARCAMPOS;
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := False;
+    btnDeletar.Enabled    := false;
+    btnEditar.Enabled     := False;
+    btnCANCELAR.Enabled   := True;
+    btnBUSCAR.Enabled  := True;
+
+end;
+
+procedure TTFrmDIZIMOOFERTA.BtnSalvarClick(Sender: TObject);
+begin
+    DM.QueryDIZIMOS.Edit;
+
+    DM.QueryDIZIMOS.Post;  // colca a QUERY em modo Post
+    Messagedlg('Registro salvo com sucesso!',
+    mtInformation, [mbOK],0);
+    LIMPARCAMPOS;
+    EXIBITOTALDIA;
+
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+    btnBUSCAR.Enabled  := True;
+
+end;
+
+
+procedure TTFrmDIZIMOOFERTA.DBGrid1CellClick(Column: TColumn);
+begin
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := True;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := True;
+    btnBUSCAR.Enabled     := False;
+end;
+
+procedure TTFrmDIZIMOOFERTA.DBGridBUSCARCellClick(Column: TColumn);
 var
   Valor: Double;  // Declare a variável Valor como um número de ponto flutuante
 begin
@@ -214,167 +220,99 @@ begin
   DM.QueryMembro.Edit;
   btnEditar.Enabled := true;
   btnDeletar.Enabled := true;
-  habilitarCampos;
+//  habilitarCampos;
 
   if not DM.QueryDIZIMOS.FieldByName('NOME').IsNull then
-    EditNOME.Text := DM.QueryDIZIMOS.FieldByName('NOME').AsString;
+    DBEditNOME.Text := DM.QueryDIZIMOS.FieldByName('NOME').AsString;
 
   if not DM.QueryDIZIMOS.FieldByName('DATA').IsNull then
-     DateDIZIMO.Date := DM.QueryDIZIMOS.FieldByName('DATA').AsDateTime;
+     DBEditDATA.Date := DM.QueryDIZIMOS.FieldByName('DATA').AsDateTime;
 
   if not DM.QueryDIZIMOS.FieldByName('FORMA').IsNull then
-     CBFormas.Text := DM.QueryDIZIMOS.FieldByName('FORMA').AsString;
+     DBCBFORMA.Text := DM.QueryDIZIMOS.FieldByName('FORMA').AsString;
 
   if not DM.QueryDIZIMOS.FieldByName('OBS').IsNull then
-     MemoOBSERVACAO.Text := DM.QueryDIZIMOS.FieldByName('OBS').AsString;
+     DBMemoOBSERVACAO.Text := DM.QueryDIZIMOS.FieldByName('OBS').AsString;
 
   if not DM.QueryDIZIMOS.FieldByName('TIPO').IsNull then
-     cbTipo.Text := DM.QueryDIZIMOS.FieldByName('TIPO').AsString;
+     DBcbTipo.Text := DM.QueryDIZIMOS.FieldByName('TIPO').AsString;
 
   if not DM.QueryDIZIMOS.FieldByName('VALOR').IsNull then
+     DBcbTipo.Text := DM.QueryDIZIMOS.FieldByName('VALOR').AsString;
+
+end;
+//PROCEDURE PARA TOTALIZAR VALOR ENTRADAS DO DIA
+procedure TTFrmDIZIMOOFERTA.EXIBITOTALDIA;
+var
+  DataSelecionada: TDate;
+  ValorTotal: Double;
+begin
+  DataSelecionada := DatePickerFiltro.Date; // Isso obtém a data selecionada no DateTimePicker
+
+  // Fecha a conexão existente
+  DM.QueryDIZIMOS.Close;
+
+  // Define a query para obter apenas os registros da data selecionada
+  DM.QueryDIZIMOS.SQL.Text := 'SELECT * FROM TBL_DIZIMOS WHERE DATA = :Data';
+  DM.QueryDIZIMOS.ParamByName('Data').AsDate := DataSelecionada;
+  DM.QueryDIZIMOS.Open;
+
+  // Calcula o valor total para a data selecionada
+  ValorTotal := 0.0;
+  DM.QueryDIZIMOS.First;
+  while not DM.QueryDIZIMOS.EOF do
   begin
-    if TryStrToFloat(DM.QueryDIZIMOS.FieldByName('VALOR').AsString, Valor) then
-      EditVALDIZIMO.Text := FormatFloat('0.00', Valor)
-    else
-      EditVALDIZIMO.Text := '0.00';  // Tratar valor inválido como 0.00 ou outra ação adequada
+    ValorTotal := ValorTotal + DM.QueryDIZIMOS.FieldByName('VALOR').AsFloat;
+    DM.QueryDIZIMOS.Next;
   end;
 
+  LabelTotal.Caption := Format('Total: R$ %n', [ValorTotal]);
 end;
 
-procedure TFrmDIZIMOOFERTA.DBGridDIZIMOSCellClick(Column: TColumn);
-var
-  Moeda: Currency;
-begin
-  DM.TBL_DIZIMOS.Edit;
-  DM.QueryDIZIMOS.Edit;
-  btnEditar.Enabled := true;
-  btnDeletar.Enabled := true;
-  habilitarCampos;
-
-  if DM.QueryDIZIMOS.FieldByName('ID_DIZIMO').Value <> null then
-     EditID_DIZIMO.Text := DM.QueryDIZIMOS.FieldByName('ID_DIZIMO').Value;
-  if DM.QueryDIZIMOS.FieldByName('NOME').Value <> null then
-     EditNOME.Text := DM.QueryDIZIMOS.FieldByName('NOME').Value;
-  if DM.QueryDIZIMOS.FieldByName('DATA').Value <> null then
-     DateDIZIMO.date := DM.QueryDIZIMOS.FieldByName('DATA').Value;
-  if DM.QueryDIZIMOS.FieldByName('FORMA').Value <> null then
-     cbFORMAS.Text := DM.QueryDIZIMOS.FieldByName('FORMA').Value;
-  if DM.QueryDIZIMOS.FieldByName('TIPO').Value <> null then
-     cbTIPO.Text := DM.QueryDIZIMOS.FieldByName('TIPO').Value;
-
-  if TryStrToCurr(VarToStr(DM.QueryDIZIMOS.FieldByName('VALOR').Value), Moeda) then
-     EditVALDIZIMO.Text := FormatCurr('R$ #,##0.00', Moeda)
-  else
-     EditVALDIZIMO.Text := 'R$ 0,00';
-
-  if DM.QueryDIZIMOS.FieldByName('OBS').Value <> null then
-     MemoOBSERVACAO.Text := DM.QueryDIZIMOS.FieldByName('OBS').Value;
-end;
-
-procedure TFrmDIZIMOOFERTA.DBGridDIZIMOSDrawColumnCell(Sender: TObject;
-  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
-var
-  Moeda: Currency;
-  MoedaStr: string;
-  lLinha: Integer;
-  ValorStr: string;
-begin
-  // Obtém o número do registro (linha)
-  lLinha := DBGridDIZIMOS.DataSource.DataSet.RecNo;
-
-  // Verifica se o número da linha é par ou ímpar, aplicando as cores
-  if Odd(lLinha) then
-    DBGridDIZIMOS.Canvas.Brush.Color := cl3DLight
-  else
-    DBGridDIZIMOS.Canvas.Brush.Color := clWindow;
-
-  // Se a coluna for "VALOR" e o estado não for de edição, formate como moeda
-  if (Column.FieldName = 'VALOR') and (not (gdSelected in State)) then
-  begin
-    // Mantenha as casas decimais. Não remova os pontos ou vírgulas.
-    ValorStr := Column.Field.AsString;
-
-    // Verifique se o valor da célula não é vazio ou nulo
-    if not Column.Field.IsNull and (ValorStr <> '') then
-    begin
-      // Tente converter o valor da célula para moeda
-      if TryStrToCurr(ValorStr, Moeda) then
-        MoedaStr := FormatCurr('R$ #,##0.00', Moeda)
-      else
-        MoedaStr := '0.00';  // Tratar valor inválido como 0.00 ou outra ação adequada
-    end
-    else
-    begin
-      MoedaStr := '0.00';  // Trate valores nulos ou vazios como 0.00
-    end;
-
-    // Desenhe o valor formatado na célula
-    DBGridDIZIMOS.Canvas.FillRect(Rect);
-    DBGridDIZIMOS.Canvas.TextOut(Rect.Left + 2, Rect.Top + 2, MoedaStr);
-  end
-  else
-  begin
-    // Para outras colunas, desenhe o valor padrão
-    DBGridDIZIMOS.DefaultDrawColumnCell(Rect, DataCol, Column, State);
-  end;
-end;
-
-procedure TFrmDIZIMOOFERTA.desabilitarCampos;
-begin
-  EditNOME        .Enabled := false;
-  EditVALDIZIMO   .Enabled := false;
-  MemoOBSERVACAO  .Enabled := false;
-end;
-
-
-
-procedure TFrmDIZIMOOFERTA.EditVALDIZIMOChange(Sender: TObject);
-begin
-   //se o edit estiver vazio, nada pode ser feito.
-   If (EditVALDIZIMO.Text = emptystr) then
-      EditVALDIZIMO.Text := '0,00';
-   //obter o texto do edit, SEM a virgula e SEM o ponto decimal:
-   s := '';
-   for I := 1 to length(EditVALDIZIMO.Text) do
-   if (EditVALDIZIMO.text[I] in ['0'..'9']) then
-      s := s + EditVALDIZIMO.text[I];
-   //fazer com que o conteúdo do edit apresente 2 casas decimais:
-   v := strtofloat(s);
-   v := (v /100); // para criar 2 casa decimais
-   //Formata o valor de (V) para aceitar valores do tipo 0,10.
-   EditVALDIZIMO.text := FormatFloat('R$ #,,,,0.00',v);
-   EditVALDIZIMO.SelStart := Length(EditVALDIZIMO.text);
-       // Exibir o valor em um ShowMessage
-    ShowMessage('O valor do Edit é: ' + EditVALDIZIMO.Text);
-end;
-
-
-procedure TFrmDIZIMOOFERTA.FormShow(Sender: TObject);
+procedure TTFrmDIZIMOOFERTA.FormShow(Sender: TObject);
 begin
   DM.TBL_DIZIMOS.Active := false;
   DM.TBL_DIZIMOS.Active := true;
-  limparCampos;
-  buscarTudo;
+  DatePickerFiltro.Date := Date;
+  EXIBITOTALDIA;
+
+//  buscarTudo;
   BtnSalvar.Enabled  := false;
   btnEditar.Enabled  := false;
   btnDeletar.Enabled := false;
   btnBUSCAR.Enabled := false;
 end;
-procedure TFrmDIZIMOOFERTA.habilitarCampos;
+
+procedure TTFrmDIZIMOOFERTA.LIMPARCAMPOS;
 begin
-  EditNOME        .Enabled := true;
-  EditVALDIZIMO   .Enabled := true;
-  MemoOBSERVACAO  .Enabled := true;
+  DBEditCodDizimo   .Text  := '';
+  DBEditCodMovimento.Text  := '';
+  DBEditROLL        .Text  := '';
+  DBEditNOME        .Text  := '';
+  DBEditVALOR       .Text  := '';
+  DBCBFORMA         .Text  := '';
+  DBcbTipo          .Text  := '';
+  DBMemoOBSERVACAO  .Text  := '';
 end;
-//
-procedure TFrmDIZIMOOFERTA.limparCampos;
+procedure TTFrmDIZIMOOFERTA.BtnFiltroDizimoClick(Sender: TObject);
 begin
-  EditNOME        .Text  := '';
-  EditVALDIZIMO   .Text  := '';
-  MemoOBSERVACAO  .Text  := '';
+  EXIBITOTALDIA;
 end;
-procedure TFrmDIZIMOOFERTA.btnBUSCARClick(Sender: TObject);
+
+procedure TTFrmDIZIMOOFERTA.BtnAtualizarClick(Sender: TObject);
+begin
+
+    DM.QueryDIZIMOS.Refresh;  // colca a QUERY em modo Post
+    Messagedlg('Registro atualizado com sucesso!',
+    mtInformation, [mbOK],0);
+
+    LIMPARCAMPOS;
+
+end;
+
+procedure TTFrmDIZIMOOFERTA.btnBUSCARClick(Sender: TObject);
 begin
   FrmBUSCARMEMBRO.ShowModal;      {Abre a form para Pesquisa de Pessoa}
 end;
+
 end.

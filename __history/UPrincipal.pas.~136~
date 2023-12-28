@@ -1,0 +1,465 @@
+unit UPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.WinXCalendars,
+  Vcl.ExtCtrls, Vcl.Menus, Vcl.Buttons, Vcl.WinXCtrls, Vcl.WinXPickers,
+  Vcl.Imaging.pngimage, EAppProt, Vcl.Imaging.jpeg, Data.DB, Vcl.Grids,
+  Vcl.DBGrids, frxClass, UCarteirinhas, UDizimos, UAniversariantes, Vcl.ToolWin,
+  Vcl.ComCtrls,  ShellAPI;
+
+// Vcl.Imaging.pngimage, EAppProt, Vcl.Imaging.jpeg, ESpshScr;
+type
+  TFrmPrincipal = class(TForm)
+    PanelMenuDireita: TPanel;
+    CalendarView1: TCalendarView;
+    GBoxUsuario: TGroupBox;
+    LabelUsuario: TLabel;
+    Timer1: TTimer;
+    MainMenu1: TMainMenu;
+    Cadastro1: TMenuItem;
+    Funes1: TMenuItem;
+    PanelMenuTop: TPanel;
+    Sair1: TMenuItem;
+    Deslogar1: TMenuItem;
+    Encerrar1: TMenuItem;
+    Membros1: TMenuItem;
+    btnADDMEmbro: TSpeedButton;
+    Profissoes1: TMenuItem;
+    BtnSAIR: TSpeedButton;
+    ratamentos1: TMenuItem;
+    LabelHora: TLabel;
+    Image2: TImage;
+    Image3: TImage;
+    SobreoPrograma1: TMenuItem;
+    SobreoPrograma: TMenuItem;
+    Configuraes1: TMenuItem;
+    Carteirinhas1: TMenuItem;
+    btnCarteirinhas: TSpeedButton;
+    btnDIZIMOS: TSpeedButton;
+    BtnANIVERSARIANTES: TSpeedButton;
+    Utilitarios1: TMenuItem;
+    Calculadora1: TMenuItem;
+    btnDocumentos: TSpeedButton;
+    Cadastrodaigreja1: TMenuItem;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    btnLogOff: TSpeedButton;
+    Panel1: TPanel;
+    GroupBox1: TGroupBox;
+    LabelTotalMembros: TLabel;
+    Label5: TLabel;
+    GroupBox2: TGroupBox;
+    LabelTotalDIACONO: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    LabelTotalPRESBITERO: TLabel;
+    LabelTotalDIACONISA: TLabel;
+    Label10: TLabel;
+    N3: TMenuItem;
+    SpeedButton4: TSpeedButton;
+    CadMembroNovo: TSpeedButton;
+    Label1: TLabel;
+    LabelTotalPASTOR: TLabel;
+    Label2: TLabel;
+    LabelTotalEVANGELISTA: TLabel;
+    StatusBar1: TStatusBar;
+    ToolBar1: TToolBar;
+    ExecRestantes: TLabel;
+    Suporte1: TMenuItem;
+    AbrirAnydesk: TMenuItem;
+    BtnCadGerais: TSpeedButton;
+    // EvSplashScreen1: TEvSplashScreen;
+    procedure Button1Click(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure Encerrar1Click(Sender: TObject);
+    procedure Membros1Click(Sender: TObject);
+    procedure btnADDMEmbroClick(Sender: TObject);
+    procedure BtnSAIRClick(Sender: TObject);
+    procedure Profissoes1Click(Sender: TObject);
+    procedure Tratamentos1Click(Sender: TObject);
+    procedure Deslogar1Click(Sender: TObject);
+    procedure SobreoProgramaClick(Sender: TObject);
+    procedure Licensa1Click(Sender: TObject);
+    procedure Carteirinhas1Click(Sender: TObject);
+    procedure btnCarteirinhasClick(Sender: TObject);
+    procedure btnDIZIMOSClick(Sender: TObject);
+    procedure BtnANIVERSARIANTESClick(Sender: TObject);
+    procedure Calculadora1Click(Sender: TObject);
+    procedure btnDocumentosClick(Sender: TObject);
+    procedure Cadastrodaigreja1Click(Sender: TObject);
+    procedure N2Click(Sender: TObject);
+    procedure btnLogOffClick(Sender: TObject);
+    //Restaura função que restaura o som BEEP do sistema operacional
+    procedure RestauraBeepWindows;
+    procedure SpeedButton4Click(Sender: TObject);
+    procedure CadMembroNovoClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure AbrirAnydeskClick(Sender: TObject);
+    procedure BtnCadGeraisClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmPrincipal: TFrmPrincipal;
+
+implementation
+
+{$R *.dfm}
+
+uses UDM, ULogin, UProfissoes, UTratamentos, USobre,
+  UDocumentos, UCadIgreja, Utema, uBackup, UCadMembroS, UCadGrupos;
+
+procedure TFrmPrincipal.btnLogOffClick(Sender: TObject);
+begin
+  FrmLogin := TFrmLogin.Create(self);
+  FrmPrincipal.Close;
+  FrmLogin.ShowModal;
+end;
+
+procedure TFrmPrincipal.Button1Click(Sender: TObject);
+begin
+  Application.Terminate;
+end;
+
+procedure TFrmPrincipal.Cadastrodaigreja1Click(Sender: TObject);
+begin
+  frmCadIgreja.ShowModal;
+end;
+
+procedure TFrmPrincipal.CadMembroNovoClick(Sender: TObject);
+begin
+    FrmCadMembroS.ShowModal;
+end;
+
+procedure TFrmPrincipal.Calculadora1Click(Sender: TObject);
+begin
+  WinExec('Calc.exe', SW_Show);
+end;
+
+procedure TFrmPrincipal.Carteirinhas1Click(Sender: TObject);
+begin
+  // carrega o componente TFRXREPORT em modo Design em tempo de execução
+  DM.RelCarteira.DesignReport();
+end;
+
+procedure TFrmPrincipal.Deslogar1Click(Sender: TObject);
+// if FrmLogin = nil then
+begin
+  FrmLogin := TFrmLogin.Create(self);
+  FrmPrincipal.Close;
+  FrmLogin.ShowModal;
+end;
+
+procedure TFrmPrincipal.Encerrar1Click(Sender: TObject);
+begin
+  Application.Terminate;
+end;
+
+procedure TFrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+   FrmCadMembroS.Release;
+end;
+
+procedure TFrmPrincipal.FormShow(Sender: TObject);
+// Abre form full Screen ( precisa configurar BorderStyle = bsSigle ou none )
+var
+  r: TRect;
+  TotalDIACONO, TotalDIACONISA, TotalPRESBITERO,  TotalMEMBROS,   TotaleVANGELISTA, TotalPASTOR: Integer;
+begin
+
+  //Reabilita som Beep do Windows
+  RestauraBeepWindows;
+  // Mostra o user logado no sistema
+  LabelUsuario.Caption := DM.TblAcesso.FieldByName('USUARIO').AsString;
+  // Abre form full Screen ( precisa configurar BorderStyle = bsSigle ou none )
+  SystemParametersInfo(SPI_GETWORKAREA, 0, @r, 0);
+  SetBounds(r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top);
+  CalendarView1.Date := Now;
+
+   // Consultar a tabela TBL_MEMBROS para contar os membros com o tratamento "DIACONO"
+  DM.QDiacono.Close;
+  DM.QDiacono.SQL.Clear;
+  DM.QDiacono.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''DIÁCONO''');
+  DM.QDiacono.Open;
+
+  // Obter o total de registros encontrados
+  TotalDIACONO := DM.QDiacono.Fields[0].AsInteger;
+
+  // Exibir o Resultado no componente visual, por exemplo, em um Label
+  LabelTotalDIACONO.Caption := IntToStr(TotalDIACONO);
+
+      // Consultar a tabela TBL_MEMBROS para contar os membros com o tratamento "DIACONISA"
+  DM.QDiaca.Close;
+  DM.QDiaca.SQL.Clear;
+  DM.QDiaca.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''DIACONISA''');
+  DM.QDiaca.Open;
+
+  // Obter o total de registros encontrados
+  TotalDIACONISA := DM.QDiaca.Fields[0].AsInteger;
+
+  // Exibir o Resultado no componente visual, por exemplo, em um Label
+  LabelTotalDIACONISA.Caption := IntToStr(TotalDIACONISA);
+
+
+   // Consultar a tabela TBL_MEMBROS para contar os membros com o tratamento "PRESBITERO"
+  DM.QPresb.Close;
+  DM.QPresb.SQL.Clear;
+  DM.QPresb.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''PRESBÍTERO''');
+  DM.QPresb.Open;
+
+  // Obter o total de registros encontrados
+  TotalPRESBITERO := DM.QPresb.Fields[0].AsInteger;
+
+  // Exibir o Resultado no componente visual, por exemplo, em um Label
+  LabelTotalPRESBITERO.Caption := IntToStr(TotalPRESBITERO);
+
+
+  // Consultar a tabela TBL_MEMBROS para contar o total de registros
+  DM.QMembro.Close;
+  DM.QMembro.SQL.Clear;
+  DM.QMembro.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS');
+  DM.QMembro.Open;
+
+  // Obter o total de registros encontrados
+  TotalMembros := DM.QMembro.Fields[0].AsInteger;
+
+  // Exibir o total no componente visual, por exemplo, em um Label
+  LabelTotalMembros.Caption := IntToStr(TotalMembros);
+
+
+   // Consultar a tabela TBL_MEMBROS para contar os membros com o tratamento "EVANGELISTA"
+  DM.QEvang.Close;
+  DM.QEvang.SQL.Clear;
+  DM.QEvang.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''EVANGELISTA''');
+  DM.QEvang.Open;
+
+  // Obter o total de registros encontrados
+  TotalEVANGELISTA := DM.QEvang.Fields[0].AsInteger;
+
+  // Exibir o Resultado no componente visual, por exemplo, em um Label
+  LabelTotalEVANGELISTA.Caption := IntToStr(TotalEVANGELISTA);
+
+
+   // Consultar a tabela TBL_MEMBROS para contar os membros com o tratamento "PRESBITERO"
+  DM.QPastor.Close;
+  DM.QPastor.SQL.Clear;
+  DM.QPastor.SQL.Add('SELECT COUNT(*) FROM TBL_MEMBROS WHERE TRATAMENTO = ''PASTOR''');
+  DM.QPastor.Open;
+
+  // Obter o total de registros encontrados
+  TotalPASTOR := DM.QPastor.Fields[0].AsInteger;
+
+  // Exibir o Resultado no componente visual, por exemplo, em um Label
+  LabelTotalPASTOR.Caption := IntToStr(TotalPASTOR);
+
+
+end;
+
+procedure TFrmPrincipal.Licensa1Click(Sender: TObject);
+var
+FrmAppCodLib : TFrmAppCodLib;
+begin
+  try
+  FrmAppCodLib := TFrmAppCodLib.Create(Self);
+  FrmAppCodLib.showmodal;
+  finally
+  freeandnil(FrmAppCodLib);
+  end;
+end;
+
+procedure TFrmPrincipal.Membros1Click(Sender: TObject);
+var
+FrmCadMembroS : TFrmCadMembroS;
+begin
+  try
+  FrmCadMembroS := TFrmCadMembroS.Create(Self);
+  FrmCadMembroS.showmodal;
+  finally
+  freeandnil(FrmCadMembroS);
+  end;
+end;
+
+procedure TFrmPrincipal.N2Click(Sender: TObject);
+var
+frmTema : TfrmTema;
+begin
+  try
+  frmTema := TfrmTema.Create(Self);
+  frmTema.showmodal;
+  finally
+  freeandnil(frmTema);
+  end;
+end;
+
+
+procedure TFrmPrincipal.Profissoes1Click(Sender: TObject);
+var
+FrmCadProfissoes : TFrmCadProfissoes;
+begin
+  try
+  FrmCadProfissoes := TFrmCadProfissoes.Create(Self);
+  FrmCadProfissoes.showmodal;
+  finally
+  freeandnil(FrmCadProfissoes);
+  end;
+end;
+
+//Restaura função que restaura o som BEEP do sistema operacional
+procedure TFrmPrincipal.RestauraBeepWindows;
+var
+  Sound: Integer;
+begin
+  SystemParametersInfo(SPI_GETBEEP, 0, @Sound, 0);
+  if Sound = 0 then
+  begin
+    SystemParametersInfo(SPI_SETBEEP, 1, Pointer(0), SPIF_SENDCHANGE);
+  end;
+end;
+
+procedure TFrmPrincipal.Tratamentos1Click(Sender: TObject);
+var
+FrmSobre : TFrmSobre;
+begin
+  try
+  FrmTRATAMENTOS := TFrmTRATAMENTOS.Create(Self);
+  FrmTRATAMENTOS.showmodal;
+  finally
+  freeandnil(FrmTRATAMENTOS);
+  end;
+end;
+
+procedure TFrmPrincipal.SobreoProgramaClick(Sender: TObject);
+var
+FrmSobre : TFrmSobre;
+begin
+  try
+  FrmSobre := TFrmSobre.Create(Self);
+  FrmSobre.showmodal;
+  finally
+  freeandnil(FrmSobre);
+  end;
+end;
+
+procedure TFrmPrincipal.AbrirAnydeskClick(Sender: TObject);
+var
+  CaminhoExe: string;
+begin
+  // Especifique o caminho completo para o arquivo .exe que você deseja abrir
+  CaminhoExe := 'Support\AnyDesk.exe'; // Substitua pelo caminho do seu arquivo .exe
+
+  // Abre o arquivo .exe
+  ShellExecute(0, 'open', PChar(CaminhoExe), nil, nil, SW_SHOWNORMAL);
+end;
+
+procedure TFrmPrincipal.btnADDMEmbroClick(Sender: TObject);
+var
+FrmCadMembroS : TFrmCadMembroS;
+begin
+try
+FrmCadMembroS := TFrmCadMembroS.Create(Self);
+FrmCadMembroS.showmodal;
+finally
+freeandnil(FrmCadMembroS);
+end;
+end;
+
+procedure TFrmPrincipal.BtnANIVERSARIANTESClick(Sender: TObject);
+var
+FrmAniversariantes : TFrmAniversariantes;
+begin
+  try
+  FrmAniversariantes := TFrmAniversariantes.Create(Self);
+  FrmAniversariantes.showmodal;
+  finally
+  freeandnil(FrmAniversariantes);
+  end;
+end;
+
+procedure TFrmPrincipal.BtnSAIRClick(Sender: TObject);
+begin
+  Application.Terminate;
+  DM.FDConn.Connected := False; // Desconecta o Firebird ao sair
+  // DM.Free;
+end;
+
+procedure TFrmPrincipal.BtnCadGeraisClick(Sender: TObject);
+var
+  FrmCadastrosGerais : TFrmCadastrosGerais;
+begin
+  try
+  FrmCadastrosGerais := TFrmCadastrosGerais.Create(Self);
+  FrmCadastrosGerais.showmodal;
+  finally
+  freeandnil(FrmCadastrosGerais);
+  end;
+end;
+
+procedure TFrmPrincipal.SpeedButton4Click(Sender: TObject);
+  var
+  fBackup : TfBackup;
+begin
+  try
+  fBackup := TfBackup.Create(Self);
+  fBackup.showmodal;
+  finally
+  freeandnil(fBackup);
+  end;
+end;
+
+procedure TFrmPrincipal.btnDocumentosClick(Sender: TObject);
+var
+FrmDocumentos : TFrmDocumentos;
+begin
+  try
+  FrmDocumentos := TFrmDocumentos.Create(Self);
+  FrmDocumentos.showmodal;
+  finally
+  freeandnil(FrmDocumentos);
+  end;
+end;
+
+procedure TFrmPrincipal.btnCarteirinhasClick(Sender: TObject);
+//begin
+//  FrmCarteirinha.ShowModal;
+//end;
+var
+FrmCarteirinha : TFrmCarteirinha;
+begin
+  try
+  FrmCarteirinha := TFrmCarteirinha.Create(Self);
+  FrmCarteirinha.showmodal;
+  finally
+  freeandnil(FrmCarteirinha);
+  end;
+end;
+
+procedure TFrmPrincipal.btnDIZIMOSClick(Sender: TObject);
+begin
+  TFrmDIZIMOOFERTA.ShowModal;
+end;
+// var
+//FrmDIZIMOOFERTA : TTFrmDIZIMOOFERTA;
+//begin
+//  try
+//  FrmDIZIMOOFERTA := TTFrmDIZIMOOFERTA.Create(Self);
+//  FrmDIZIMOOFERTA.showmodal;
+//  finally
+//  freeandnil(TFrmDIZIMOOFERTA);
+//  end;
+//end;
+
+procedure TFrmPrincipal.Timer1Timer(Sender: TObject);
+// Mostra a hora do sitema
+begin
+  LabelHora.Caption := TimeToStr(Now);
+end;
+
+end.

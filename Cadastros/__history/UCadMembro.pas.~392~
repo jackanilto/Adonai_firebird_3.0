@@ -1,0 +1,25 @@
+unit UCadGrupos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UProfissoes, Data.DB, Vcl.StdCtrls,
+  Vcl.Mask, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.Buttons, Vcl.Grids, Vcl.DBGrids;
+
+type
+  TFrmCadGrupos = class(TFrmCadProfissoes)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmCadGrupos: TFrmCadGrupos;
+
+implementation
+
+{$R *.dfm}
+
+end.

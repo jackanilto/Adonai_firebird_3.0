@@ -8,7 +8,8 @@ uses
   Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtDlgs, Vcl.ExtCtrls, Data.DB,
   Vcl.Grids, Vcl.DBGrids, Vcl.Mask, Vcl.AppEvnts, Vcl.Imaging.jpeg, frxDesgn,
   frxClass, frxExportBaseDialog, frxExportPDF, Vcl.DBCtrls, JvExMask,
-  JvToolEdit, JvDBControls, Vcl.Imaging.pngimage;
+  JvToolEdit, JvDBControls, Vcl.Imaging.pngimage, JvExStdCtrls, JvCombobox,
+  JvDBCombobox;
 
 type
   TFrmCadMembroS = class(TForm)
@@ -18,7 +19,6 @@ type
     Label1: TLabel;
     grid: TDBGrid;
     imgProfile: TImage;
-    ImageList1: TImageList;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
@@ -106,30 +106,18 @@ type
     DBcbMORADIA: TDBComboBox;
     DBcbBATIZADO: TDBComboBox;
     DBcbDIZIMISTA: TDBComboBox;
-    DBcbTRATAMENTO: TDBComboBox;
     DBDateADMISSAO: TJvDBDateEdit;
     DBDateCONSAGRA: TJvDBDateEdit;
     DBEditIGREJA_BATISMO: TDBEdit;
     DBDateBATISMO: TJvDBDateEdit;
     DBEditCIDADEBATISMO: TDBEdit;
-    DBcbGRUPO: TDBComboBox;
     DBEditPAISORIG: TDBEdit;
     DBEditTELPAISORIG: TDBEdit;
     DBEditCAMPO13: TDBEdit;
     DBEditCAMPO15: TDBEdit;
-    DBcbMINISTERIO: TDBComboBox;
     DBMemoOBSERVACAO: TDBMemo;
     DBMemoHistórico: TDBMemo;
     DBDateVALCARTEIRA: TJvDBDateEdit;
-    PanelTop: TPanel;
-    btnNovo: TBitBtn;
-    btnEditar: TBitBtn;
-    btnDeletar: TBitBtn;
-    BtnSalvar: TBitBtn;
-    btnCANCELAR: TBitBtn;
-    BtnAtualizar: TBitBtn;
-    BtnPesquisar: TBitBtn;
-    BtnSair: TBitBtn;
     EditPATHFOTO: TDBEdit;
     Label21: TLabel;
     DBeditid: TDBEdit;
@@ -138,6 +126,21 @@ type
     Label33: TLabel;
     Image1: TImage;
     edtBuscar: TEdit;
+    DBcbTRATAMENTO: TComboBox;
+    DBcbGRUPO: TComboBox;
+    DBcbMINISTERIO: TComboBox;
+    IMGPAGECONTROL: TImageList;
+    PanelMenu: TPanel;
+    BtnNovo: TBitBtn;
+    BtnSalvar: TBitBtn;
+    BtnDeletar: TBitBtn;
+    BtnEditar: TBitBtn;
+    BtnCancelar: TBitBtn;
+    BtnAtualizar: TBitBtn;
+    BtnPesquisar: TBitBtn;
+    BtnSair: TBitBtn;
+    DBLookupComboBox1: TDBLookupComboBox;
+    DBComboBoxtrata: TDBComboBox;
    // EditVALOR: TEdit;
     procedure btnNovoClick(Sender: TObject);
     procedure BtnSalvarClick(Sender: TObject);
@@ -153,10 +156,11 @@ type
     procedure btnCartasClick(Sender: TObject);
     procedure gridDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
+
     function ApplicationPath: String;
     Function PathWithDelim( const APath : String ) : String ;
-
     function RightStr(const AText: AnsiString; const ACount: Integer): AnsiString;
+
     procedure BtnGravarClick(Sender: TObject);
     procedure btnCANCELARClick(Sender: TObject);
     procedure BtnAtualizarClick(Sender: TObject);
@@ -174,7 +178,9 @@ type
    procedure buscarNome();
    procedure associarCampos();
    procedure carregarcbPROFISSAO();
-//   procedure carregarComboboxMatriz();
+   PROCEDURE CARREGARTRATAMENTO();
+   PROCEDURE CARREGARIGREJAS();
+   PROCEDURE CARREGARGRUPOS();
 //   procedure carregarComboboxFuncoes();
    procedure carregarImagemPadrao();
 //   procedure carregarComboboxIgrejas();
@@ -212,8 +218,6 @@ begin
    DM.TBL_MEMBROS.FieldByName('CONTATO2')             .Value          := DBEditCONTATO2.Text;
    DM.TBL_MEMBROS.FieldByName('EMAIL')                .AsString       := DBEditEMAIL                .Text;
    DM.TBL_MEMBROS.FieldByName('DIZIMISTA')            .AsString       := DBcbDIZIMISTA              .Text;
-   //DM.TBL_MEMBROS.FieldByName('VALOR')              .Value          := EditVALOR                .Text;
-   //DM.TBL_MEMBROS.FieldByName('VALOR')                .Value          := StrToFloat(EditVALOR.Text);
    DM.TBL_MEMBROS.FieldByName('GRUPO')                .AsString       := DBcbGRUPO                  .Text;
    DM.TBL_MEMBROS.FieldByName('TRATAMENTO')           .AsString       := DBcbTRATAMENTO.Text;
    DM.TBL_MEMBROS.FieldByName('OBSERVACAO')           .AsString       := DBMemoOBSERVACAO.Text;
@@ -279,7 +283,7 @@ procedure TFrmCadMembroS.btnAddClick(Sender: TObject);
 var path: string;
 dirfotos: string;
 begin
-  dirfotos:=ApplicationPath+'Fotos';
+   dirfotos:=ApplicationPath+'Fotos';
 
   if directoryexists(dirfotos) = false then
   forcedirectories(dirfotos);
@@ -305,6 +309,8 @@ begin
 end;
 
 procedure TFrmCadMembroS.btnDeletarClick(Sender: TObject);
+  var
+    CaminhoImagem: string;
 begin
     BtnSalvar.Enabled := False;
     btnNovo.Enabled := False;
@@ -316,8 +322,21 @@ begin
     btnFOTOGRAFAR.Enabled := False;
   if MessageDlg('Deseja deletar este registro?', MtConfirmation, [mbOK, MbNo],0)=mrOk then
   begin
+    // Obtém o caminho da imagem do EditPATHFOTO
+    CaminhoImagem := EditPATHFOTO.Text;
     DM.QueryMembro.Delete;  // colca a QUERY em modo edit
 
+    // Exclui a imagem associada se o caminho não estiver vazio
+    if not Trim(CaminhoImagem).IsEmpty then
+    begin
+      try
+        DeleteFile(CaminhoImagem);
+        carregarImagemPadrao();
+      except
+        on E: Exception do
+          ShowMessage('Erro ao excluir a imagem: ' + E.Message);
+      end;
+    end;
    // buscarTudo;
     limparCampos;
 
@@ -488,27 +507,32 @@ frmWebCam := TfrmWebCam.Create(Application);
 end;
 
 procedure TFrmCadMembroS.BtnGravarClick(Sender: TObject);
+
 begin
+    if DBEditNOME.Text = '' then
+    begin
+        ShowMessage('O campo NOME não pode ser vazio.');
+    end
+  else
+    begin
+        DM.QueryMembro.Edit;
+        DM.QueryMembroIMAGEM.Value := EditPATHFOTO.Text;
 
+        DM.QueryMembro.Post;  // colca a QUERY em modo Post
+        Messagedlg('Registro salvo com sucesso!',
+        mtInformation, [mbOK],0);
+        //LimparCampos;
 
-    DM.QueryMembro.Edit;
-    DM.QueryMembroIMAGEM.Value := EditPATHFOTO.Text;
+        BtnSalvar.Enabled     := False;
+        btnNovo.Enabled       := True;
+        btnDeletar.Enabled    := False;
+        btnEditar.Enabled     := True;
+        btnCANCELAR.Enabled   := False;
+        BtnPesquisar.Enabled  := True;
+        btnAdd.Enabled        := False;
+        btnFOTOGRAFAR.Enabled := False;
 
-    DM.QueryMembro.Post;  // colca a QUERY em modo Post
-    Messagedlg('Registro salvo com sucesso!',
-    mtInformation, [mbOK],0);
-    LimparCampos;
-
-
-    BtnSalvar.Enabled     := False;
-    btnNovo.Enabled       := True;
-    btnDeletar.Enabled    := False;
-    btnEditar.Enabled     := True;
-    btnCANCELAR.Enabled   := False;
-    BtnPesquisar.Enabled  := True;
-    btnAdd.Enabled        := False;
-    btnFOTOGRAFAR.Enabled := False;
-
+    end;
 end;
 
 procedure TFrmCadMembroS.buscarNome;
@@ -542,10 +566,52 @@ if not DM.TBL_PROFISSOES.IsEmpty then
   end;
 end;
 
+procedure TFrmCadMembroS.CARREGARGRUPOS;
+begin
+if not DM.TBL_GRUPOS.IsEmpty then
+  begin
+
+    while not DM.TBL_GRUPOS.Eof do
+    begin
+
+       DBcbGRUPO.Items.Add(DM.TBL_GRUPOS.FieldByName('NOME_GRUPO').AsString);
+       DM.TBL_GRUPOS.next;
+    end;
+  end;
+end;
+
+procedure TFrmCadMembroS.CARREGARIGREJAS;
+begin
+if not DM.TBL_IGREJAS.IsEmpty then
+  begin
+
+    while not DM.TBL_IGREJAS.Eof do
+    begin
+
+       DBcbMINISTERIO.Items.Add(DM.TBL_IGREJAS.FieldByName('NOME_IGREJA').AsString);
+       DM.TBL_IGREJAS.next;
+    end;
+  end;
+end;
+
 procedure TFrmCadMembroS.carregarImagemPadrao;
 begin
     caminhoImg  := GetCurrentDir + '\Fotos\sem-foto.png';
     imgProfile.Picture.LoadFromFile(caminhoImg);
+end;
+
+procedure TFrmCadMembroS.CARREGARTRATAMENTO;
+begin
+if not DM.TBL_TRATAMENTOS.IsEmpty then
+  begin
+
+    while not DM.TBL_TRATAMENTOS.Eof do
+    begin
+
+       DBcbTRATAMENTO.Items.Add(DM.TBL_TRATAMENTOS.FieldByName('TRATAMENTO').AsString);
+       DM.TBL_TRATAMENTOS.next;
+    end;
+  end;
 end;
 
 procedure TFrmCadMembroS.desabilitarCampos;
@@ -575,10 +641,28 @@ procedure TFrmCadMembroS.FormShow(Sender: TObject);
 
     DM.TBL_PROFISSOES.Active := false;
     DM.TBL_PROFISSOES.Active := true;
+    carregarcbPROFISSAO;
+
+    DM.TBL_TRATAMENTOS.Active := false;
+    DM.TBL_TRATAMENTOS.Active := true;
+    CARREGARTRATAMENTO;
+
+    DM.TBL_IGREJAS.Active := false;
+    DM.TBL_IGREJAS.Active := true;
+    CARREGARIGREJAS;
+
+    DM.TBL_GRUPOS.Active := false;
+    DM.TBL_GRUPOS.Active := true;
+    CARREGARGRUPOS;
 
     buscarTudo;
     limparCampos;
     carregarImagemPadrao();
+    // Defina o PageIndex do PageControl desejado para a página que você quer que seja exibida
+    PageControl1.ActivePageIndex := 1; // Defina o índice da página desejada
+    PageControl1.ActivePageIndex := 0; // Defina o índice da página desejada
+
+
 
     BtnSalvar.Enabled     := False;
     btnNovo.Enabled       := True;
@@ -589,21 +673,19 @@ procedure TFrmCadMembroS.FormShow(Sender: TObject);
     btnAdd.Enabled        := False;
     btnFOTOGRAFAR.Enabled := False;
 
-    carregarImagemPadrao();
-    carregarcbPROFISSAO;
   end;
 
 procedure TFrmCadMembroS.gridCellClick(Column: TColumn);
 begin
   DM.TBL_MEMBROS.Edit;
   DM.QueryMembro.Edit;
-  btnEditar.Enabled := true;
-  btnDeletar.Enabled := true;
-  btnAdd.Enabled := true;
+  btnEditar.Enabled     := true;
+  btnDeletar.Enabled    := true;
+  btnAdd.Enabled        := true;
   habilitarCampos;
-  EditPATHFOTO.Enabled := false;
-  btnCANCELAR.Enabled := true;
-  btnAdd.Enabled := true;
+  EditPATHFOTO.Enabled  := false;
+  btnCANCELAR.Enabled   := true;
+  btnAdd.Enabled        := true;
   btnFOTOGRAFAR.Enabled := true;
 
   if DM.QueryMembro.FieldByName('NOME').Value <> null then
@@ -807,7 +889,7 @@ begin
   DBEditPAISORIG    .Enabled := True;
   DBEditTELPAISORIG .Enabled := True;
   DBDateCASAMENTO   .Enabled := True;
-  CheckATIVO      .Enabled := True;
+  CheckATIVO        .Enabled := True;
   DBEditIGREJA_BATISMO.Enabled := True;
   DBDateCONSAGRA    .Enabled := True;
   DBEditNATURAL     .Enabled := True;
@@ -817,14 +899,14 @@ begin
   DBEditROLL        .Enabled := True;
   DBEditCONJUGE     .Enabled := True;
   DBEditCAMPO13     .Enabled := True;
-  DBcbMORADIA     .Enabled := True;
+  DBcbMORADIA       .Enabled := True;
   DBEditCAMPO15     .Enabled := True;
   DBMemoHistórico   .Enabled := True;
   DBcbPROFISSAO     .Enabled := True;
   DBDateNASCCONJUGE .Enabled := True;
   DBEditCIDADEBATISMO.Enabled := True;
   DBDateNASC        .Enabled := True;
-  DBMemoOBSERVACAO      .Enabled := True;
+  DBMemoOBSERVACAO  .Enabled := True;
 
 end;
 
@@ -879,10 +961,6 @@ begin
   DM.QueryMembro.SQL.Add('select * from TBL_MEMBROS where id = :id'); // passa o parametro ID
   DM.QueryMembro.ParamByName('ID').Value := DBeditid.Text;       // Recupera o parametro ID para o Edit
   DM.QueryMembro.Open();
-
-
-  DM.RelCarteira.LoadFromFile(GetCurrentDir + '\Relatorio\RelCarteirinha.fr3');
-  DM.RelCarteira.ShowReport();
   buscarTudo; // Após chamar o relatorio, executa a procedure BuscarTudo
 end;
 

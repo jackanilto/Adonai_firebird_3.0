@@ -5,8 +5,6 @@ uses
   UDM in 'Database\UDM.pas' {DM: TDataModule},
   UPrincipal in 'UPrincipal.pas' {FrmPrincipal},
   UProfissoes in 'Cadastros\UProfissoes.pas' {FrmCadProfissoes},
-  UGrupos in 'Cadastros\UGrupos.pas' {FrmGRUPOS},
-  UTratamentos in 'Cadastros\UTratamentos.pas' {FrmTRATAMENTOS},
   USobre in 'USobre.pas' {FrmSobre},
   USplash in 'USplash.pas' {FrmSplash},
   VFrames in 'Win32\WebcamFiles\VFrames.pas',
@@ -18,7 +16,7 @@ uses
   DXTypes in 'Win32\WebcamFiles\DirectX\DXTypes.pas',
   uWebCam in 'Cadastros\uWebCam.pas' {frmWebCam},
   UCarteirinhas in 'Relatorios\UCarteirinhas.pas' {FrmCarteirinha},
-  UDizimos in 'Movimentacoes\UDizimos.pas' {FrmDIZIMOOFERTA},
+  UDizimos in 'Movimentacoes\UDizimos.pas' {TFrmDIZIMOOFERTA},
   UBuscarMembro in 'Movimentacoes\UBuscarMembro.pas' {FrmBUSCARMEMBRO},
   UAniversariantes in 'Movimentacoes\UAniversariantes.pas' {FrmAniversariantes},
   UDocumentos in 'Relatorios\UDocumentos.pas' {FrmDocumentos},
@@ -27,33 +25,26 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   UAjudaTema in 'Tema\UAjudaTema.pas' {FrmAjudaTemas},
-  UEntraDizOfertas in 'Movimentacoes\UEntraDizOfertas.pas' {FrmEntraDizOfertas},
   uBackup in 'Database\uBackup.pas' {fBackup},
-  UCadMembroS in 'Cadastros\UCadMembroS.pas' {FrmCadMembroS};
+  UCadMembroS in 'Cadastros\UCadMembroS.pas' {FrmCadMembroS},
+  UCadGrupos in 'Cadastros\UCadGrupos.pas' {FrmGRUPOS},
+  UTratamentos in 'Cadastros\UTratamentos.pas' {FrmTRATAMENTOS},
+  UcadastrosGerais in 'Cadastros\UcadastrosGerais.pas' {FrmCadastros},
+  USuporte in 'Suporte\USuporte.pas' {FrmSuporte},
+  ULogos in 'Cadastros\ULogos.pas' {FrmLogos};
 
 {$R *.res}
 begin
   Application.Initialize;
-  Application.MainFormOnTaskbar := True;
+  Application.MainFormOnTaskbar := False;
   Application.CreateForm(TFrmLogin, FrmLogin);
   Application.CreateForm(TDM, DM);
-  Application.CreateForm(TFrmCadProfissoes, FrmCadProfissoes);
-  Application.CreateForm(TFrmGRUPOS, FrmGRUPOS);
-  Application.CreateForm(TFrmTRATAMENTOS, FrmTRATAMENTOS);
-  Application.CreateForm(TFrmSobre, FrmSobre);
-  Application.CreateForm(TFrmSplash, FrmSplash);
-  Application.CreateForm(TFrmCarteirinha, FrmCarteirinha);
-  Application.CreateForm(TFrmDIZIMOOFERTA, FrmDIZIMOOFERTA);
-  Application.CreateForm(TFrmBUSCARMEMBRO, FrmBUSCARMEMBRO);
-  Application.CreateForm(TFrmAniversariantes, FrmAniversariantes);
-  Application.CreateForm(TFrmDocumentos, FrmDocumentos);
-  Application.CreateForm(TfrmWebCam, frmWebCam);
-  Application.CreateForm(TfrmCadIgreja, frmCadIgreja);
-  Application.CreateForm(TfrmTema, frmTema);
-  Application.CreateForm(TFrmAjudaTemas, FrmAjudaTemas);
   Application.CreateForm(TFrmPrincipal, FrmPrincipal);
-  Application.CreateForm(TFrmEntraDizOfertas, FrmEntraDizOfertas);
-  Application.CreateForm(TfBackup, fBackup);
-  Application.CreateForm(TFrmCadMembroS, FrmCadMembroS);
+  Application.CreateForm(TFrmBUSCARMEMBRO, FrmBUSCARMEMBRO);
+  Application.CreateForm(TTFrmDIZIMOOFERTA, TFrmDIZIMOOFERTA);
+  Application.CreateForm(TFrmSobre, FrmSobre);
+  Application.CreateForm(TFrmCadastros, FrmCadastros);
+  Application.CreateForm(TFrmSuporte, FrmSuporte);
+  Application.CreateForm(TFrmLogos, FrmLogos);
   Application.Run;
 end.

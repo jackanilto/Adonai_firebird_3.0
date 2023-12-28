@@ -69,7 +69,9 @@ end;
 procedure TFrmBUSCARMEMBRO.DBGridBUSCARCellClick(Column: TColumn);
 begin
   {Associa a field do DBGrid aos edits da form DIZIMOS}
-  FrmDIZIMOOFERTA.EditNOME.Text := DBGridBUSCAR.Fields[2].AsString;
+  TFrmDIZIMOOFERTA.DBEditROLL.Text := DBGridBUSCAR.Fields[0].AsString;
+  TFrmDIZIMOOFERTA.DBEditCodDizimo.Text := DBGridBUSCAR.Fields[1].AsString;
+  TFrmDIZIMOOFERTA.DBEditNOME.Text := DBGridBUSCAR.Fields[2].AsString;
   FrmBUSCARMEMBRO.Close;
 end;
 

@@ -107,10 +107,10 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1046</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=JNCENTER;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <Icon_MainIcon>AdonaiSoftware_Icon2.ico</Icon_MainIcon>
+        <Icon_MainIcon>AdonaiSoftware_Icon10.ico</Icon_MainIcon>
         <VerInfo_AutoGenVersion>true</VerInfo_AutoGenVersion>
-        <UWP_DelphiLogo44>D:\Delphi\Icones do Projeto Adonai\Icone-da-aplicacao-44x44.png</UWP_DelphiLogo44>
-        <UWP_DelphiLogo150>D:\Delphi\Icones do Projeto Adonai\Icone-da-aplicacao-150x150.png</UWP_DelphiLogo150>
+        <UWP_DelphiLogo44>D:\Delphi\icones\Icones Diferentes 2\4b9fb563c14a190d5229b900071ad044.ico\android-icon-48x48.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>D:\Delphi\icones\Icones Diferentes 2\4b9fb563c14a190d5229b900071ad044.ico\ms-icon-150x150.png</UWP_DelphiLogo150>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
@@ -151,14 +151,6 @@
             <Form>FrmCadProfissoes</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Cadastros\UGrupos.pas">
-            <Form>FrmGRUPOS</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="Cadastros\UTratamentos.pas">
-            <Form>FrmTRATAMENTOS</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="USobre.pas">
             <Form>FrmSobre</Form>
             <FormType>dfm</FormType>
@@ -183,7 +175,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Movimentacoes\UDizimos.pas">
-            <Form>FrmDIZIMOOFERTA</Form>
+            <Form>TFrmDIZIMOOFERTA</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Movimentacoes\UBuscarMembro.pas">
@@ -210,16 +202,32 @@
             <Form>FrmAjudaTemas</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Movimentacoes\UEntraDizOfertas.pas">
-            <Form>FrmEntraDizOfertas</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="Database\uBackup.pas">
             <Form>fBackup</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Cadastros\UCadMembroS.pas">
             <Form>FrmCadMembroS</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Cadastros\UCadGrupos.pas">
+            <Form>FrmGRUPOS</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Cadastros\UTratamentos.pas">
+            <Form>FrmTRATAMENTOS</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Cadastros\UcadastrosGerais.pas">
+            <Form>FrmCadastros</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Suporte\USuporte.pas">
+            <Form>FrmSuporte</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Cadastros\ULogos.pas">
+            <Form>FrmLogos</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Base">
@@ -250,17 +258,17 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="D:\Delphi\Icones do Projeto Adonai\Icone-da-aplicacao-150x150.png" Configuration="Debug" Class="UWP_DelphiLogo150">
-                    <Platform Name="Win32">
-                        <RemoteDir>Assets\</RemoteDir>
-                        <RemoteName>Logo150x150.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="D:\Delphi\Icones do Projeto Adonai\Icone-da-aplicacao-44x44.png" Configuration="Debug" Class="UWP_DelphiLogo44">
+                <DeployFile LocalName="D:\Delphi\icones\Icones Diferentes 2\4b9fb563c14a190d5229b900071ad044.ico\android-icon-48x48.png" Configuration="Debug" Class="UWP_DelphiLogo44">
                     <Platform Name="Win32">
                         <RemoteDir>Assets\</RemoteDir>
                         <RemoteName>Logo44x44.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="D:\Delphi\icones\Icones Diferentes 2\4b9fb563c14a190d5229b900071ad044.ico\ms-icon-150x150.png" Configuration="Debug" Class="UWP_DelphiLogo150">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets\</RemoteDir>
+                        <RemoteName>Logo150x150.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

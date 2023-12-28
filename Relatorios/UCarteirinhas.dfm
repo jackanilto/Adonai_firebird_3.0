@@ -3,7 +3,7 @@ object FrmCarteirinha: TFrmCarteirinha
   Top = 0
   BorderIcons = [biSystemMenu]
   Caption = 'Impress'#227'o de Carteirinhas'
-  ClientHeight = 473
+  ClientHeight = 507
   ClientWidth = 940
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -118,7 +118,6 @@ object FrmCarteirinha: TFrmCarteirinha
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-    OnClick = btnCarteirinhaClick
   end
   object btnLimpaListaCarteiras: TSpeedButton
     Left = 755

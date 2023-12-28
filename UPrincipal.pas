@@ -8,7 +8,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.WinXCalendars,
   Vcl.ExtCtrls, Vcl.Menus, Vcl.Buttons, Vcl.WinXCtrls, Vcl.WinXPickers,
   Vcl.Imaging.pngimage, EAppProt, Vcl.Imaging.jpeg, Data.DB, Vcl.Grids,
-  Vcl.DBGrids, frxClass, UCarteirinhas, UDizimos, UAniversariantes;
+  Vcl.DBGrids, frxClass, UCarteirinhas, UDizimos, UAniversariantes, Vcl.ToolWin,
+  Vcl.ComCtrls,  ShellAPI;
 
 // Vcl.Imaging.pngimage, EAppProt, Vcl.Imaging.jpeg, ESpshScr;
 type
@@ -28,10 +29,8 @@ type
     Membros1: TMenuItem;
     btnADDMEmbro: TSpeedButton;
     Profissoes1: TMenuItem;
-    SpeedButton2: TSpeedButton;
-    btnGRUPOS: TSpeedButton;
+    BtnSAIR: TSpeedButton;
     ratamentos1: TMenuItem;
-    btnTratamentos: TSpeedButton;
     LabelHora: TLabel;
     Image2: TImage;
     Image3: TImage;
@@ -41,7 +40,7 @@ type
     Carteirinhas1: TMenuItem;
     btnCarteirinhas: TSpeedButton;
     btnDIZIMOS: TSpeedButton;
-    SpeedButton1: TSpeedButton;
+    BtnANIVERSARIANTES: TSpeedButton;
     Utilitarios1: TMenuItem;
     Calculadora1: TMenuItem;
     btnDocumentos: TSpeedButton;
@@ -61,13 +60,17 @@ type
     LabelTotalDIACONISA: TLabel;
     Label10: TLabel;
     N3: TMenuItem;
-    SpeedButton3: TSpeedButton;
-    SpeedButton4: TSpeedButton;
-    CadMembroNovo: TSpeedButton;
     Label1: TLabel;
     LabelTotalPASTOR: TLabel;
     Label2: TLabel;
     LabelTotalEVANGELISTA: TLabel;
+    StatusBar1: TStatusBar;
+    ToolBar1: TToolBar;
+    ExecRestantes: TLabel;
+    Suporte1: TMenuItem;
+    AbrirAnydesk: TMenuItem;
+    BtnCadGerais: TSpeedButton;
+    BtnSuporte: TSpeedButton;
     // EvSplashScreen1: TEvSplashScreen;
     procedure Button1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -75,18 +78,16 @@ type
     procedure Encerrar1Click(Sender: TObject);
     procedure Membros1Click(Sender: TObject);
     procedure btnADDMEmbroClick(Sender: TObject);
-    procedure SpeedButton2Click(Sender: TObject);
+    procedure BtnSAIRClick(Sender: TObject);
     procedure Profissoes1Click(Sender: TObject);
-    procedure btnGRUPOSClick(Sender: TObject);
     procedure Tratamentos1Click(Sender: TObject);
-    procedure btnTratamentosClick(Sender: TObject);
     procedure Deslogar1Click(Sender: TObject);
     procedure SobreoProgramaClick(Sender: TObject);
     procedure Licensa1Click(Sender: TObject);
     procedure Carteirinhas1Click(Sender: TObject);
     procedure btnCarteirinhasClick(Sender: TObject);
     procedure btnDIZIMOSClick(Sender: TObject);
-    procedure SpeedButton1Click(Sender: TObject);
+    procedure BtnANIVERSARIANTESClick(Sender: TObject);
     procedure Calculadora1Click(Sender: TObject);
     procedure btnDocumentosClick(Sender: TObject);
     procedure Cadastrodaigreja1Click(Sender: TObject);
@@ -94,9 +95,11 @@ type
     procedure btnLogOffClick(Sender: TObject);
     //Restaura função que restaura o som BEEP do sistema operacional
     procedure RestauraBeepWindows;
-    procedure SpeedButton3Click(Sender: TObject);
-    procedure SpeedButton4Click(Sender: TObject);
     procedure CadMembroNovoClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure AbrirAnydeskClick(Sender: TObject);
+    procedure BtnCadGeraisClick(Sender: TObject);
+    procedure BtnSuporteClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -110,13 +113,9 @@ implementation
 
 {$R *.dfm}
 
-uses UDM, ULogin, UProfissoes, UGrupos, UTratamentos, USobre,
-  UDocumentos, UCadIgreja, Utema, UEntraDizOfertas, uBackup, UCadMembroS;
-
-procedure TFrmPrincipal.btnGRUPOSClick(Sender: TObject);
-begin
-  FrmGRUPOS.ShowModal;
-end;
+uses UDM, ULogin, USobre,
+  UDocumentos, UCadIgreja, Utema, uBackup, UCadMembroS, UProfissoes,
+  UcadastrosGerais, UCadGrupos, UTratamentos, USuporte;
 
 procedure TFrmPrincipal.btnLogOffClick(Sender: TObject);
 begin
@@ -148,7 +147,7 @@ end;
 procedure TFrmPrincipal.Carteirinhas1Click(Sender: TObject);
 begin
   // carrega o componente TFRXREPORT em modo Design em tempo de execução
-  DM.RelCarteira.DesignReport();
+  DM.RelCarteira1.DesignReport();
 end;
 
 procedure TFrmPrincipal.Deslogar1Click(Sender: TObject);
@@ -164,6 +163,10 @@ begin
   Application.Terminate;
 end;
 
+procedure TFrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+   FrmCadMembroS.Release;
+end;
 
 procedure TFrmPrincipal.FormShow(Sender: TObject);
 // Abre form full Screen ( precisa configurar BorderStyle = bsSigle ou none )
@@ -171,8 +174,6 @@ var
   r: TRect;
   TotalDIACONO, TotalDIACONISA, TotalPRESBITERO,  TotalMEMBROS,   TotaleVANGELISTA, TotalPASTOR: Integer;
 begin
-   // Mostrar icone da aplicação na barra de tarefas
-  Application.ShowMainForm := True;
 
   //Reabilita som Beep do Windows
   RestauraBeepWindows;
@@ -260,27 +261,55 @@ begin
   LabelTotalPASTOR.Caption := IntToStr(TotalPASTOR);
 
 
-
 end;
 
 procedure TFrmPrincipal.Licensa1Click(Sender: TObject);
+var
+FrmAppCodLib : TFrmAppCodLib;
 begin
-  FrmAppCodLib.ShowModal;
+  try
+  FrmAppCodLib := TFrmAppCodLib.Create(Self);
+  FrmAppCodLib.showmodal;
+  finally
+  freeandnil(FrmAppCodLib);
+  end;
 end;
 
 procedure TFrmPrincipal.Membros1Click(Sender: TObject);
+var
+FrmCadMembroS : TFrmCadMembroS;
 begin
-  FrmCadMembroS.ShowModal;
+  try
+  FrmCadMembroS := TFrmCadMembroS.Create(Self);
+  FrmCadMembroS.showmodal;
+  finally
+  freeandnil(FrmCadMembroS);
+  end;
 end;
 
 procedure TFrmPrincipal.N2Click(Sender: TObject);
+var
+frmTema : TfrmTema;
 begin
-  frmTema.ShowModal;
+  try
+  frmTema := TfrmTema.Create(Self);
+  frmTema.showmodal;
+  finally
+  freeandnil(frmTema);
+  end;
 end;
 
+
 procedure TFrmPrincipal.Profissoes1Click(Sender: TObject);
+var
+FrmCadProfissoes : TFrmCadProfissoes;
 begin
-  FrmCadProfissoes.ShowModal;
+  try
+  FrmCadProfissoes := TFrmCadProfissoes.Create(Self);
+  FrmCadProfissoes.showmodal;
+  finally
+  freeandnil(FrmCadProfissoes);
+  end;
 end;
 
 //Restaura função que restaura o som BEEP do sistema operacional
@@ -296,61 +325,133 @@ begin
 end;
 
 procedure TFrmPrincipal.Tratamentos1Click(Sender: TObject);
+var
+FrmSobre : TFrmSobre;
 begin
-  FrmTRATAMENTOS.ShowModal;
+  try
+  FrmTRATAMENTOS := TFrmTRATAMENTOS.Create(Self);
+  FrmTRATAMENTOS.showmodal;
+  finally
+  freeandnil(FrmTRATAMENTOS);
+  end;
 end;
 
 procedure TFrmPrincipal.SobreoProgramaClick(Sender: TObject);
+var
+FrmSobre : TFrmSobre;
 begin
-  FrmSobre.ShowModal;
+  try
+  FrmSobre := TFrmSobre.Create(Self);
+  FrmSobre.showmodal;
+  finally
+  freeandnil(FrmSobre);
+  end;
+end;
+
+procedure TFrmPrincipal.AbrirAnydeskClick(Sender: TObject);
+var
+  CaminhoExe: string;
+begin
+  // Especifique o caminho completo para o arquivo .exe que você deseja abrir
+  CaminhoExe := 'Support\AnyDesk.exe'; // Substitua pelo caminho do seu arquivo .exe
+
+  // Abre o arquivo .exe
+  ShellExecute(0, 'open', PChar(CaminhoExe), nil, nil, SW_SHOWNORMAL);
 end;
 
 procedure TFrmPrincipal.btnADDMEmbroClick(Sender: TObject);
+var
+FrmCadMembroS : TFrmCadMembroS;
 begin
-  FrmCadMembroS.ShowModal;
+try
+FrmCadMembroS := TFrmCadMembroS.Create(Self);
+FrmCadMembroS.showmodal;
+finally
+freeandnil(FrmCadMembroS);
+end;
 end;
 
-procedure TFrmPrincipal.SpeedButton1Click(Sender: TObject);
+procedure TFrmPrincipal.BtnANIVERSARIANTESClick(Sender: TObject);
+var
+FrmAniversariantes : TFrmAniversariantes;
 begin
-  FrmAniversariantes.ShowModal;
+  try
+  FrmAniversariantes := TFrmAniversariantes.Create(Self);
+  FrmAniversariantes.showmodal;
+  finally
+  freeandnil(FrmAniversariantes);
+  end;
 end;
 
-procedure TFrmPrincipal.SpeedButton2Click(Sender: TObject);
+procedure TFrmPrincipal.BtnSAIRClick(Sender: TObject);
 begin
   Application.Terminate;
   DM.FDConn.Connected := False; // Desconecta o Firebird ao sair
   // DM.Free;
 end;
 
-procedure TFrmPrincipal.SpeedButton3Click(Sender: TObject);
+procedure TFrmPrincipal.BtnSuporteClick(Sender: TObject);
+var
+FrmSuporte : TFrmSuporte;
 begin
-  FrmEntraDizOfertas.ShowModal;
+  try
+  FrmSuporte := TFrmSuporte.Create(Self);
+  FrmSuporte.showmodal;
+  finally
+  freeandnil(FrmSuporte);
+  end;
 end;
 
-procedure TFrmPrincipal.SpeedButton4Click(Sender: TObject);
+procedure TFrmPrincipal.BtnCadGeraisClick(Sender: TObject);
+var
+FrmCadastrosGerais : TFrmCadastros;
 begin
- fBackup.ShowModal;
+  try
+  FrmCadastrosGerais := TFrmCadastros.Create(Self);
+  FrmCadastrosGerais.showmodal;
+  finally
+  freeandnil(FrmCadastrosGerais);
+  end;
 end;
 
 procedure TFrmPrincipal.btnDocumentosClick(Sender: TObject);
+var
+FrmDocumentos : TFrmDocumentos;
 begin
-  FrmDocumentos.ShowModal;
-end;
-
-procedure TFrmPrincipal.btnTratamentosClick(Sender: TObject);
-begin
-  FrmTRATAMENTOS.ShowModal;
+  try
+  FrmDocumentos := TFrmDocumentos.Create(Self);
+  FrmDocumentos.showmodal;
+  finally
+  freeandnil(FrmDocumentos);
+  end;
 end;
 
 procedure TFrmPrincipal.btnCarteirinhasClick(Sender: TObject);
+var
+FrmCarteirinha : TFrmCarteirinha;
 begin
-  FrmCarteirinha.ShowModal;
+  try
+  FrmCarteirinha := TFrmCarteirinha.Create(Self);
+  FrmCarteirinha.showmodal;
+  finally
+  freeandnil(FrmCarteirinha);
+  end;
 end;
 
 procedure TFrmPrincipal.btnDIZIMOSClick(Sender: TObject);
 begin
-  FrmDIZIMOOFERTA.ShowModal;
+  TFrmDIZIMOOFERTA.ShowModal;
 end;
+// var
+//FrmDIZIMOOFERTA : TTFrmDIZIMOOFERTA;
+//begin
+//  try
+//  FrmDIZIMOOFERTA := TTFrmDIZIMOOFERTA.Create(Self);
+//  FrmDIZIMOOFERTA.showmodal;
+//  finally
+//  freeandnil(TFrmDIZIMOOFERTA);
+//  end;
+//end;
 
 procedure TFrmPrincipal.Timer1Timer(Sender: TObject);
 // Mostra a hora do sitema

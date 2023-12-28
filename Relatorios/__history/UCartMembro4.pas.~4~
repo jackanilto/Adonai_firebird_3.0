@@ -1,0 +1,101 @@
+unit UCartMembro4;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RLReport, Vcl.ExtCtrls,
+   Vcl.StdCtrls, Vcl.Imaging.pngimage, Vcl.Imaging.jpeg, Vcl.DBCtrls, Data.DB,
+  Datasnap.DBClient, Vcl.Mask;
+
+type
+  TFrmCartMembro4 = class(TForm)
+    FrmRelCarteira4: TRLReport;
+    RLBand1: TRLBand;
+    RLLabel1: TRLLabel;
+    RLSystemInfo1: TRLSystemInfo;
+    RLLabel2: TRLLabel;
+    RLSubDetail1: TRLSubDetail;
+    Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    procedure RLBand2BeforePrint(Sender: TObject; var PrintIt: Boolean);
+//    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+//    PROCEDURE CARREGALOGOIGREJA;
+//    PROCEDURE RECUPERAFOTO;
+  procedure CarregarImagemNoTImage(DiretorioImagem: string; AImage: TImage);
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmCartMembro4: TFrmCartMembro4;
+  caminhoImg: string;
+
+implementation
+
+{$R *.dfm}
+
+uses UDM, UDocumentos;
+
+procedure TFrmCartMembro4.CarregarImagemNoTImage(DiretorioImagem: string;
+  AImage: TImage);
+var
+  Imagem: TPngImage;
+  Bitmap: TBitmap;
+begin
+  Imagem := TPngImage.Create;
+  Bitmap := TBitmap.Create;
+  try
+    Imagem.LoadFromFile(DiretorioImagem);
+
+    // Configurar o tamanho do bitmap
+    Bitmap.SetSize(Imagem.Width, Imagem.Height);
+
+    // Preencher o bitmap com a cor de fundo desejada
+    Bitmap.Canvas.Brush.Color := clBtnFace; // Ou outra cor desejada
+    Bitmap.Canvas.FillRect(Rect(0, 0, Bitmap.Width, Bitmap.Height));
+
+    // Desenhar a imagem PNG no bitmap
+    Bitmap.Canvas.Draw(0, 0, Imagem);
+
+    // Configurar o componente TImage para suportar transparência
+    AImage.Picture.Assign(Bitmap);
+    AImage.Transparent := True;
+  finally
+    Imagem.Free;
+    Bitmap.Free;
+  end;
+end;
+
+procedure TFrmCartMembro4.RLBand2BeforePrint(Sender: TObject; var PrintIt: Boolean);
+var
+  CaminhoImagemMembro: string;
+  CaminhoImagemIgreja: string;
+begin
+  // Carregar a imagem do membro
+  CaminhoImagemMembro := DM.cDSCarteiraIMAGEM.AsString;
+
+  if Trim(CaminhoImagemMembro) <> '' then
+  begin
+    try
+      FotoMembro.Picture.LoadFromFile(CaminhoImagemMembro);
+    except
+      on E: Exception do
+      begin
+        ShowMessage('Erro ao carregar a imagem do membro: ' + E.Message);
+      end;
+    end;
+  end
+  else
+  begin
+    FotoMembro.Picture := nil; // Trate conforme necessário para imagem padrão ou deixe em branco
+  end;
+
+  // Carregar a imagem da igreja
+  CaminhoImagemIgreja := GetCurrentDir + '\Logos\Carteira.png';
+  CarregarImagemNoTImage(CaminhoImagemIgreja, LOGOIGREJA);
+end;
+end.

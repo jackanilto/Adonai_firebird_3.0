@@ -1,12 +1,9 @@
 unit USobre;
-
 interface
-
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, EAppProt, Vcl.ExtCtrls,
   Vcl.Buttons, Vcl.Imaging.jpeg, Vcl.Imaging.pngimage;
-
 type
   TFrmSobre = class(TForm)
     Image1: TImage;
@@ -19,6 +16,11 @@ type
     WindowsSync: TEvAppProtect;
     ImgChaves: TImage;
     Label1: TLabel;
+    Image3: TImage;
+    Image4: TImage;
+    ExecRestantes: TLabel;
+    Image5: TImage;
+    Image6: TImage;
     procedure FormActivate(Sender: TObject);
     procedure BtnRenovarClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -28,29 +30,36 @@ type
     { Private declarations }
   public
     { Public declarations }
-
   end;
-
 var
   FrmSobre: TFrmSobre;
-
 implementation
-
 {$R *.dfm}
-
-uses UPrincipal, ShellApi, DateUtils, UITypes, UAlerta;
-
+uses UPrincipal, ShellApi, DateUtils, UITypes;
 
 procedure TFrmSobre.FormActivate(Sender: TObject);
+var
+  ExecucoesRestantes: Integer;
 begin
+  // Mostra a data de início e término da licença
   LabelInicioFim.Caption := 'Inicio da Licença  -  ' + FormatDateTime('dd/mm/yyyy', WindowsSync.DateStart) + #13 +
-                    'Licença ativa até  -  ' + FormatDateTime('dd/mm/yyyy', WindowsSync.DateEnd);
+                            'Licença ativa até  -  ' + FormatDateTime('dd/mm/yyyy', WindowsSync.DateEnd);
 
+  // Calcula e exibe os dias restantes até a expiração da licença
+  LabelDiasResta.Caption := 'Faltam ' + IntToStr(DaysBetween(Today, WindowsSync.DateEnd)) +
+                            ' dias para expirar sua licença';
 
-  LabelDiasResta.Caption := 'Faltam ' + IntToStr(DaysBetween( Today, WindowsSync.DateEnd))+' dias para expirar sua licença';
+  // Calcula as execuções restantes
+  ExecucoesRestantes := WindowsSync.MaxLoad - WindowsSync.CurrentLoad;
 
+  // Exibe o total de execuções restantes
+//  ExecRestantes.Caption := 'Você executou ' + IntToStr(WindowsSync.CurrentLoad) + ' de um total de ' +
+//                           IntToStr(WindowsSync.MaxLoad) + ' execuções. Faltam ' +
+//                           IntToStr(ExecucoesRestantes) + ' execuções.';
+  ExecRestantes.Caption := 'Seu programa está em periodo de teste com ' +
+                           IntToStr(WindowsSync.MaxLoad) + ' execuções. Faltam ' + IntToStr(ExecucoesRestantes) + #13 + #13 +
+                           '. Após este periodo, entre contato e faça o registro.';
 end;
-
 procedure TFrmSobre.FormCreate(Sender: TObject);
 const
  Msg = 'Faltam menos de 10 dias para a licença expirar. '+ #13 +
@@ -59,14 +68,11 @@ begin
   if ((WindowsSync.DateEnd - Date) < 10) and
     (MessageDlg(Msg, mtConfirmation, mbYesNoCancel, 0) = mrYes) then
     WindowsSync.ResetLockApplication;
-
 end;
-
 procedure TFrmSobre.BtnRenovarClick(Sender: TObject);
 begin
 WindowsSync.ResetLockApplication;
 end;
-
 procedure TFrmSobre.BtnVisitarSiteClick(Sender: TObject);
 var
   ConsultaEndereco: string;
@@ -74,7 +80,6 @@ begin
   ConsultaEndereco := 'https://www.jncsolucoes.com.br';
   ShellExecute(0, 'open', PCHar(ConsultaEndereco), nil, nil, SW_SHOWNORMAL);
 end;
-
 procedure TFrmSobre.BtnWhatsAppClick(Sender: TObject);
 var
   ConsultaEndereco: string;
@@ -82,5 +87,4 @@ begin
   ConsultaEndereco := 'https://wa.link/pj1nll';
   ShellExecute(0, 'open', PCHar(ConsultaEndereco), nil, nil, SW_SHOWNORMAL);
 end;
-
 end.

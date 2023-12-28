@@ -4,21 +4,33 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Buttons,
-  Vcl.Grids, Vcl.DBGrids;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
+  Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, Vcl.Mask, Vcl.DBCtrls;
 
 type
   TFrmTRATAMENTOS = class(TForm)
-    GridGrupos: TDBGrid;
-    EditCOD: TEdit;
-    EditGRUPOS: TEdit;
-    Label1: TLabel;
+    Panel1: TPanel;
     btnNovo: TBitBtn;
-    BtnSalvar: TBitBtn;
-    btnEditar: TBitBtn;
-    btnDeletar: TBitBtn;
+    BtnEditar: TBitBtn;
+    BtnDeletar: TBitBtn;
+    btnSalvar: TBitBtn;
+    BtnCancelar: TBitBtn;
+    DBGrid1: TDBGrid;
+    Label1: TLabel;
+    Label2: TLabel;
+    DBEditTRATAMENTO: TDBEdit;
+    DBEditCODIGO: TDBEdit;
+    procedure btnNovoClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
+    procedure BtnEditarClick(Sender: TObject);
+    procedure BtnDeletarClick(Sender: TObject);
+    procedure BtnCancelarClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure DBGrid1CellClick(Column: TColumn);
   private
     { Private declarations }
+    PROCEDURE LIMPARCAMPOS;
+    PROCEDURE BUSCARTUDO;
   public
     { Public declarations }
   end;
@@ -30,6 +42,160 @@ implementation
 
 {$R *.dfm}
 
-uses UCadMembroS, UDM, UGrupos, ULogin, UPrincipal, UProfissoes;
+uses UCadMembroS, UDM, UPrincipal, UcadastrosGerais;
+
+procedure TFrmTRATAMENTOS.BtnCancelarClick(Sender: TObject);
+begin
+   DM.QueryTratamentos.Cancel;
+   Messagedlg('A ação foi cancelada com sucesso!',
+   mtInformation, [mbOK],0);
+
+   DM.QueryTratamentos.Close;
+   DM.QueryTratamentos.Open;
+
+   BUSCARTUDO;
+   limparCampos;
+   BtnSalvar.Enabled     := False;
+   btnNovo.Enabled       := True;
+   btnDeletar.Enabled    := False;
+   btnEditar.Enabled     := True;
+   btnCANCELAR.Enabled   := False;
+end;
+
+procedure TFrmTRATAMENTOS.BtnDeletarClick(Sender: TObject);
+begin
+    BtnSalvar.Enabled := False;
+    btnNovo.Enabled := False;
+    btnDeletar.Enabled := False;
+    btnEditar.Enabled := False;
+    btnCANCELAR.Enabled := True;
+  if MessageDlg('Deseja deletar este registro?', MtConfirmation, [mbOK, MbNo],0)=mrOk then
+  begin
+    DM.QueryTratamentos.Delete;  // colca a QUERY em modo edit
+
+    buscarTudo;
+    limparCampos;
+
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+  end
+  else
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+
+
+    buscarTudo;
+    limparCampos;
+   // caso o usuario clique em NÂO
+  abort;
+
+    buscarTudo;
+    limparCampos;
+
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+
+end;
+
+procedure TFrmTRATAMENTOS.BtnEditarClick(Sender: TObject);
+begin
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := False;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := False;
+    btnCANCELAR.Enabled   := True;
+
+if MessageDlg('Deseja alterar este registro?', MtConfirmation, [mbOK, MbNo],0)=mrOk then
+  begin
+    DM.QueryTratamentos.Edit;  // colca a QUERY em modo edit
+  end
+  else
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := False;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := False;
+    btnCANCELAR.Enabled   := True;
+    // caso o usuario clique em NÂO
+  abort;
+
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := True;
+
+end;
+
+procedure TFrmTRATAMENTOS.btnNovoClick(Sender: TObject);
+   var prox:Integer;
+begin
+    DM.QueryTratamentos.Open;     //Abre
+    DM.QueryTratamentos.Last;     //Move para o Ultimo
+    prox:=DM.QueryTratamentosID.AsInteger + 1;   //  Recebe o ultimo ID e Add +1
+    DM.QueryTratamentos.Append; //  Insere uma linha nova no final da tabela.
+    DM.QueryTratamentosID.AsInteger:=prox;  //Faz o AutoIncremento na tabela
+    DBEditTRATAMENTO.SetFocus;   // Coloca o Foco ( Cursor ) no Edit Usuario
+
+
+    limparCampos();
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := False;
+    btnDeletar.Enabled    := false;
+    btnEditar.Enabled     := False;
+    btnCANCELAR.Enabled   := True;
+
+end;
+
+procedure TFrmTRATAMENTOS.btnSalvarClick(Sender: TObject);
+begin
+    DM.QueryTratamentos.Edit;
+    DM.QueryTratamentos.Post;  // colca a QUERY em modo Post
+    Messagedlg('Registro salvo com sucesso!',
+    mtInformation, [mbOK],0);
+    LimparCampos;
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+
+end;
+
+procedure TFrmTRATAMENTOS.BUSCARTUDO;
+begin
+    DM.QueryTratamentos.Close;
+    DM.QueryTratamentos.SQL.Clear;
+    DM.QueryTratamentos.SQL.Add('select * from TBL_TRATAMENTOS order by ID asc');
+    DM.QueryTratamentos.Open();
+end;
+
+procedure TFrmTRATAMENTOS.DBGrid1CellClick(Column: TColumn);
+begin
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := True;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := True;
+end;
+
+procedure TFrmTRATAMENTOS.FormShow(Sender: TObject);
+begin
+     BUSCARTUDO;
+end;
+
+procedure TFrmTRATAMENTOS.LIMPARCAMPOS;
+begin
+  DBEditCODIGO.enabled := False;
+  DBEditTRATAMENTO.Text := '';
+end;
 
 end.

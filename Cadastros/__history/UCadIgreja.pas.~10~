@@ -1,0 +1,211 @@
+unit UCadIgreja;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Mask,
+  Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons;
+
+type
+  TfrmCadIgreja = class(TForm)
+    Label1: TLabel;
+    DBEdit1: TDBEdit;
+    Label2: TLabel;
+    DBEditIGREJA: TDBEdit;
+    Label4: TLabel;
+    DBEdit4: TDBEdit;
+    Label5: TLabel;
+    DBEdit5: TDBEdit;
+    Label6: TLabel;
+    DBEdit6: TDBEdit;
+    Label7: TLabel;
+    DBEdit7: TDBEdit;
+    DBGrid1: TDBGrid;
+    PanelMenu: TPanel;
+    BtnNovo: TBitBtn;
+    BtnSalvar: TBitBtn;
+    BtnDeletar: TBitBtn;
+    BtnEditar: TBitBtn;
+    BtnCancelar: TBitBtn;
+    BtnSair: TBitBtn;
+    Label3: TLabel;
+    DBEdit3: TDBEdit;
+    Label8: TLabel;
+    DBEdit8: TDBEdit;
+    Label9: TLabel;
+    DBEdit9: TDBEdit;
+    procedure BtnNovoClick(Sender: TObject);
+    procedure BtnSalvarClick(Sender: TObject);
+    procedure BtnDeletarClick(Sender: TObject);
+    procedure BtnEditarClick(Sender: TObject);
+    procedure BtnSairClick(Sender: TObject);
+    procedure BtnCancelarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmCadIgreja: TfrmCadIgreja;
+
+implementation
+
+{$R *.dfm}
+
+uses UDM, UPrincipal, UcadastrosGerais;
+
+
+
+procedure TfrmCadIgreja.BtnCancelarClick(Sender: TObject);
+begin
+   DM.QueryIgrejas.Cancel;
+   Messagedlg('Ação cancelada',
+   mtInformation, [mbOK],0);
+
+   DM.QueryIgrejas.Close;
+   DM.QueryIgrejas.Open;
+
+   //buscarTudo;
+   //limparCampos;
+  // carregarImagemPadrao();
+   BtnSalvar.Enabled     := False;
+   btnNovo.Enabled       := True;
+   btnDeletar.Enabled    := False;
+   btnEditar.Enabled     := True;
+   btnCANCELAR.Enabled   := False;
+end;
+
+procedure TfrmCadIgreja.BtnDeletarClick(Sender: TObject);
+begin
+    BtnSalvar.Enabled := False;
+    btnNovo.Enabled := False;
+    btnDeletar.Enabled := False;
+    btnEditar.Enabled := False;
+    btnCANCELAR.Enabled := True;
+  if MessageDlg('Deseja deletar este registro?', MtConfirmation, [mbOK, MbNo],0)=mrOk then
+  begin
+    DM.QueryIgrejas.Delete;  // colca a QUERY em modo edit
+
+//    buscarTudo;
+//    limparCampos;
+
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+  end
+  else
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+
+
+//    buscarTudo;
+//    limparCampos;
+   // caso o usuario clique em NÂO
+  abort;
+
+//    buscarTudo;
+//    limparCampos;
+
+    BtnSalvar.Enabled     := False;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := False;
+
+end;
+
+procedure TfrmCadIgreja.BtnEditarClick(Sender: TObject);
+begin
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := False;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := False;
+    btnCANCELAR.Enabled   := True;
+
+if MessageDlg('Deseja alterar este registro?', MtConfirmation, [mbOK, MbNo],0)=mrOk then
+  begin
+    DM.QueryIgrejas.Edit;  // colca a QUERY em modo edit
+  end
+  else
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := False;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := False;
+    btnCANCELAR.Enabled   := True;
+    // caso o usuario clicar em NÂO
+  abort;
+
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := True;
+    btnDeletar.Enabled    := False;
+    btnEditar.Enabled     := True;
+    btnCANCELAR.Enabled   := True;
+
+end;
+
+procedure TfrmCadIgreja.BtnNovoClick(Sender: TObject);
+   var prox:Integer;
+begin
+    DM.QueryIgrejas.Open;     //Abre
+    DM.QueryIgrejas.Last;     //Move para o Ultimo
+    prox:=DM.QueryIgrejasID.AsInteger + 1;   //  Recebe o ultimo ID e Add +1
+    DM.QueryIgrejas.Append; //  Insere uma linha nova no final da tabela.
+    DM.QueryIgrejasID.AsInteger:=prox;  //Faz o AutoIncremento na tabela
+    DBEditIGREJA.SetFocus;   // Coloca o Foco ( Cursor ) no Edit Usuario
+
+
+    //limparCampos();/
+    BtnSalvar.Enabled     := True;
+    btnNovo.Enabled       := False;
+    btnDeletar.Enabled    := false;
+    btnEditar.Enabled     := False;
+    btnCANCELAR.Enabled   := True;
+
+end;
+
+procedure TfrmCadIgreja.BtnSairClick(Sender: TObject);
+  begin
+    if Application.MessageBox('Deseja fechar o formulario?','Confirmação',
+    mb_YesNo + MB_ICONQUESTION)=Id_Yes then
+    begin
+      frmCadIgreja.Close;
+
+      DM.QueryIgrejas.Close;
+      DM.QueryIgrejas.Open;
+    end
+      else
+      Abort;
+  end;
+
+procedure TfrmCadIgreja.BtnSalvarClick(Sender: TObject);
+begin
+    if DBEditIGREJA.Text = '' then
+    begin
+        ShowMessage('O campo NOME não pode ser vazio.');
+    end
+  else
+    begin
+        DM.QueryIgrejas.Edit;
+
+        DM.QueryIgrejas.Post;  // colca a QUERY em modo Post
+        Messagedlg('Registro salvo com sucesso!',
+        mtInformation, [mbOK],0);
+        //LimparCampos;
+
+        BtnSalvar.Enabled     := False;
+        btnNovo.Enabled       := True;
+        btnDeletar.Enabled    := False;
+        btnEditar.Enabled     := True;
+        btnCANCELAR.Enabled   := False;
+
+    end;
+end;
+
+end.

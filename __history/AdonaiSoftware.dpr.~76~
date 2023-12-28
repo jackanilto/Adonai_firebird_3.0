@@ -1,0 +1,58 @@
+program AdonaiSoftware;
+uses
+  Vcl.Forms,
+  ULogin in 'ULogin.pas' {FrmLogin},
+  UDM in 'Database\UDM.pas' {DM: TDataModule},
+  UPrincipal in 'UPrincipal.pas' {FrmPrincipal},
+  UProfissoes in 'Cadastros\UProfissoes.pas' {FrmCadProfissoes},
+  USobre in 'USobre.pas' {FrmSobre},
+  USplash in 'USplash.pas' {FrmSplash},
+  VFrames in 'Win32\WebcamFiles\VFrames.pas',
+  VSample in 'Win32\WebcamFiles\VSample.pas',
+  Direct3D9 in 'Win32\WebcamFiles\DirectX\Direct3D9.pas',
+  DirectDraw in 'Win32\WebcamFiles\DirectX\DirectDraw.pas',
+  DirectShow9 in 'Win32\WebcamFiles\DirectX\DirectShow9.pas',
+  DirectSound in 'Win32\WebcamFiles\DirectX\DirectSound.pas',
+  DXTypes in 'Win32\WebcamFiles\DirectX\DXTypes.pas',
+  uWebCam in 'Cadastros\uWebCam.pas' {frmWebCam},
+  UCarteirinhas in 'Relatorios\UCarteirinhas.pas' {FrmCarteirinha},
+  UDizimos in 'Movimentacoes\UDizimos.pas' {TFrmDIZIMOOFERTA},
+  UBuscarMembro in 'Movimentacoes\UBuscarMembro.pas' {FrmBUSCARMEMBRO},
+  UAniversariantes in 'Movimentacoes\UAniversariantes.pas' {FrmAniversariantes},
+  UDocumentos in 'Relatorios\UDocumentos.pas' {FrmDocumentos},
+  UCadIgreja in 'Cadastros\UCadIgreja.pas' {frmCadIgreja},
+  Utema in 'Tema\Utema.pas' {frmTema},
+  Vcl.Themes,
+  Vcl.Styles,
+  UAjudaTema in 'Tema\UAjudaTema.pas' {FrmAjudaTemas},
+  uBackup in 'Database\uBackup.pas' {fBackup},
+  UCadMembroS in 'Cadastros\UCadMembroS.pas' {FrmCadMembroS},
+  UCadGrupos in 'Cadastros\UCadGrupos.pas' {FrmGRUPOS},
+  UTratamentos in 'Cadastros\UTratamentos.pas' {FrmTRATAMENTOS},
+  UcadastrosGerais in 'Cadastros\UcadastrosGerais.pas' {FrmCadastros},
+  USuporte in 'Suporte\USuporte.pas' {FrmSuporte},
+  UCartMembro4 in 'Relatorios\UCartMembro4.pas' {FrmCartMembro4},
+  UCartMembro2 in 'Relatorios\UCartMembro2.pas' {FrmCartMembro2},
+  ULogos in 'Cadastros\ULogos.pas' {FrmLogos},
+  UCartaRecomendação in 'Documentos\UCartaRecomendação.pas' {FrmCartaApresentacao},
+  UCartMembro1 in 'Relatorios\UCartMembro1.pas' {FrmCartMembro1};
+
+{$R *.res}
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := False;
+  Application.CreateForm(TFrmLogin, FrmLogin);
+  Application.CreateForm(TDM, DM);
+  Application.CreateForm(TFrmPrincipal, FrmPrincipal);
+  Application.CreateForm(TFrmBUSCARMEMBRO, FrmBUSCARMEMBRO);
+  Application.CreateForm(TTFrmDIZIMOOFERTA, TFrmDIZIMOOFERTA);
+  Application.CreateForm(TFrmSobre, FrmSobre);
+  Application.CreateForm(TFrmCadastros, FrmCadastros);
+  Application.CreateForm(TFrmSuporte, FrmSuporte);
+  Application.CreateForm(TFrmCartMembro4, FrmCartMembro4);
+  Application.CreateForm(TFrmCartMembro2, FrmCartMembro2);
+  Application.CreateForm(TFrmLogos, FrmLogos);
+  Application.CreateForm(TFrmCartaApresentacao, FrmCartaApresentacao);
+  Application.CreateForm(TFrmCartMembro1, FrmCartMembro1);
+  Application.Run;
+end.

@@ -28,7 +28,6 @@ type
     Label9: TLabel;
     DBEdit9: TDBEdit;
     DBGrid1: TDBGrid;
-    DBNavigator1: TDBNavigator;
   private
     { Private declarations }
   public

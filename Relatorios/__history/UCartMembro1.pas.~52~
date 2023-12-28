@@ -1,0 +1,104 @@
+unit UCartMembro1;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RLReport, Vcl.Imaging.jpeg, Vcl.ExtCtrls,
+  Vcl.Imaging.pngimage;
+
+type
+  TFrmCartMembro1 = class(TForm)
+    FrmRelCarteira1: TRLReport;
+    RLBand1: TRLBand;
+    RLLabel1: TRLLabel;
+    RLSystemInfo1: TRLSystemInfo;
+    RLLabel2: TRLLabel;
+    RLBand2: TRLBand;
+    RLDBText1: TRLDBText;
+    FundoCarteira: TImage;
+    FotoMembro: TImage;
+    procedure RLBand2BeforePrint(Sender: TObject; var PrintIt: Boolean);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmCartMembro1: TFrmCartMembro1;
+
+
+implementation
+
+{$R *.dfm}
+
+uses UDM, UDocumentos;
+
+
+procedure ArredondarCantos(const Imagem: TPicture; const Raio: Integer);
+var
+  PNG: TPngImage;
+  X, Y: Integer;
+begin
+  // Certifique-se de que a imagem não está vazia
+  if Assigned(Imagem.Graphic) and (Imagem.Graphic is TPngImage) then
+  begin
+    PNG := TPngImage(Imagem.Graphic);
+
+    // Criar uma cópia da imagem
+    PNG.CreateAlpha;
+
+    // Desenhar imagem original na cópia
+    PNG.Canvas.Draw(0, 0, Imagem.Graphic);
+
+    // Criar máscara com cantos arredondados
+    PNG.Canvas.Brush.Color := clWhite;
+    PNG.Canvas.RoundRect(0, 0, PNG.Width, PNG.Height, Raio, Raio);
+
+    // Aplicar máscara
+    for X := 0 to PNG.Width - 1 do
+    begin
+      for Y := 0 to PNG.Height - 1 do
+      begin
+        if PNG.Canvas.Pixels[X, Y] = clWhite then
+          PNG.Canvas.Pixels[X, Y] := $00000000; // tornar os pixels brancos transparentes
+      end;
+    end;
+
+    // Atribuir imagem resultante de volta ao Picture
+    Imagem.Graphic := PNG;
+  end;
+end;
+
+
+procedure TFrmCartMembro1.RLBand2BeforePrint(Sender: TObject; var PrintIt: Boolean);
+var
+  CaminhoImagem: string;
+begin
+  // Certifique-se de que o campo IMAGEM contém o caminho completo da imagem
+  CaminhoImagem := DM.cDSCarteiraIMAGEM.AsString;
+
+  if Trim(CaminhoImagem) <> '' then
+  begin
+    try
+      // Tente carregar a imagem
+      FotoMembro.Picture.LoadFromFile(CaminhoImagem);
+
+      // Adicione cantos arredondados com um raio de 10 pixels (ajuste conforme necessário)
+      ArredondarCantos(FotoMembro.Picture, 10);
+    except
+      on E: Exception do
+      begin
+        // Em caso de erro, exiba uma mensagem ou trate conforme necessário
+        ShowMessage('Erro ao carregar a imagem: ' + E.Message);
+      end;
+    end;
+  end
+  else
+  begin
+    // Se o campo IMAGEM estiver vazio, talvez exiba uma imagem padrão ou trate conforme necessário
+    FotoMembro.Picture := nil; // Isso pode ser substituído por uma imagem padrão, se desejar
+  end;
+end;
+end.
